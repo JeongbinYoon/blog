@@ -1,0 +1,16 @@
+{
+  "name": "any",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev"
+  },
+  "dependencies": {
+    "turbo": "^1.9.3"
+  }
+}
