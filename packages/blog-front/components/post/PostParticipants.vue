@@ -1,6 +1,6 @@
 <template>
   <div class="post-participants">
-    <span>공동 작업자</span>
+    <span>작업자</span>
     <ul class="participants">
       <li>aaaaaa</li>
       <li>bbbbbb</li>
@@ -26,16 +26,19 @@ export default {}
   top: 30%;
   border-left: 1px solid $color_border_grey;
   > span {
-    font-size: $font_size_small;
+    font-size: $font_size_tiny;
   }
   .participants {
-    padding: 10px 0 0 15px;
+    padding-left: 15px;
     li {
       margin: 5px 0;
       color: $color_dark_grey;
       font-size: $font_size_small;
       &::before {
         content: '';
+      }
+      &:last-child {
+        margin-bottom: 0;
       }
     }
   }

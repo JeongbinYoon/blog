@@ -77,7 +77,7 @@ export default {
 
 <style lang="scss" scoped>
 .post-content {
-  width: 80%;
+  width: 50%;
   flex-shrink: 1;
   margin: 0 20px;
   &__meta-data {
