@@ -1,5 +1,5 @@
 <template>
-  <div class="all-posts">
+  <section class="all-posts">
     <h2 class="heading-title">All Posts</h2>
     <ul class="all-posts__list">
       <li class="post">
@@ -161,7 +161,7 @@
         </div>
       </li>
     </ul>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -172,6 +172,7 @@ export default {}
 .all-posts {
   width: 80%;
   margin-top: 60px;
+  max-width: $max_width_pc;
   .heading-title {
     font-size: $font_size_huge;
     font-weight: 700;

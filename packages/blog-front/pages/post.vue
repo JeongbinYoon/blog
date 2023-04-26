@@ -20,10 +20,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .post {
   display: flex;
   width: 100%;
+  max-width: $max_width_pc;
+  margin: 0 auto;
   margin-top: 40px;
 }
 </style>

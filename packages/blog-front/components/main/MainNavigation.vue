@@ -1,10 +1,7 @@
 <template>
   <nav>
     <ul>
-      <li><a href="">글</a></li>
-      <li><a href="">글</a></li>
-      <li><a href="">글</a></li>
-      <li><a href="">글</a></li>
+      <li><a href="">Post</a></li>
     </ul>
   </nav>
 </template>

@@ -1,9 +1,12 @@
 <template>
-  <ul class="participants">
-    <li>참가자1</li>
-    <li>참가자2</li>
-    <li>참가자3</li>
-  </ul>
+  <div class="post-participants">
+    <span>공동 작업자</span>
+    <ul class="participants">
+      <li>aaaaaa</li>
+      <li>bbbbbb</li>
+      <li>cccccc</li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -11,17 +14,30 @@ export default {}
 </script>
 
 <style lang="scss" scoped>
-.participants {
+.post-participants {
   flex-shrink: 0;
   width: 10%;
-  min-width: 200px;
+  max-width: 200px;
+  min-width: 150px;
   height: fit-content;
-  margin: 0 20px 0 50px;
-  padding: 20px;
-  border-bottom: 1px solid $color_border_grey;
+  padding: 10px 15px;
   box-sizing: content-box;
-  li {
-    margin: 5px 0;
+  position: sticky;
+  top: 30%;
+  border-left: 1px solid $color_border_grey;
+  > span {
+    font-size: $font_size_small;
+  }
+  .participants {
+    padding: 10px 0 10px 15px;
+    li {
+      margin: 5px 0;
+      color: $color_dark_grey;
+      font-size: $font_size_small;
+      &::before {
+        content: '';
+      }
+    }
   }
 }
 </style>
