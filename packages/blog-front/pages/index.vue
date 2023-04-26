@@ -1,14 +1,22 @@
 <template>
-  <MainContents />
+  <main>
+    <LatestPosts />
+    <AllPosts />
+  </main>
 </template>
 
 <script>
-import MainContents from '@/components/main/MainContents.vue'
+import AllPosts from '@/components/main/contents/AllPosts.vue'
+import LatestPosts from '@/components/main/contents/LatestPosts.vue'
 export default {
-  components: {
-    MainContents,
-  },
+  components: { LatestPosts, AllPosts },
 }
 </script>
 
-<style scoped></style>
+<style lang="scss">
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>

@@ -17,9 +17,9 @@ export default {
     Editor,
   },
   methods: {
-    async onSumbit() {
+    onSumbit() {
       // const response = await this.$sanity.fetch(query)
-      // console.log(response)
+      console.log('s')
     },
   },
 }
