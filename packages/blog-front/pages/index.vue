@@ -5,7 +5,6 @@
 <script>
 import MainContents from '@/components/main/MainContents.vue'
 export default {
-  laytout: 'default',
   components: {
     MainContents,
   },

@@ -29,7 +29,7 @@ export default {}
     font-size: $font_size_small;
   }
   .participants {
-    padding: 10px 0 10px 15px;
+    padding: 10px 0 0 15px;
     li {
       margin: 5px 0;
       color: $color_dark_grey;

@@ -2,6 +2,8 @@
   <nav>
     <ul>
       <li><a href="">Post</a></li>
+      <li><a href="">글쓰기</a></li>
+      <li><a href="">로그인</a></li>
     </ul>
   </nav>
 </template>

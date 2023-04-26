@@ -47,7 +47,9 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: ['@blocknote/core'],
+  },
   sanity: {
     projectId: 'lyvfm7vk',
     apiVersion: '2023-04-25',

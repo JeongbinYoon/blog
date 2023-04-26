@@ -10,14 +10,16 @@
 <script>
 import { groq } from '@nuxtjs/sanity'
 import { defineComponent } from 'vue'
+
 const query = groq`*[_type == "category"]`
+
 export default defineComponent({
   async mounted() {
     const response = await this.$sanity.fetch(query)
     console.log(response)
     console.log(this.$sanity)
   },
-  data: () => ({ title: '' }),
+  // data: () => ({ title: '' }),
 })
 </script>
 // blog // directory // - front // - backend // blog-front // blog-backend
