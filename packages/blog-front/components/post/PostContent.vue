@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <span class="createdAt">
+    <span class="content-date">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -17,7 +17,7 @@
       </svg>
       2023-04-20
     </span>
-    <h1 class="title">제1회 kakao tech meet에 초대합니다!</h1>
+    <h1 class="content__title">제1회 kakao tech meet에 초대합니다!</h1>
     <div>
       카카오의카카오의카카오의카카오의카카오의카카오의<br />
       카카오의카카오의카카오의카카오의카카오의카카오의카카오의카카오의카카오의카카오의
@@ -34,14 +34,14 @@ export default {}
   width: 80%;
   flex-shrink: 1;
 }
-.createdAt {
+.content-date {
   font-size: 14px;
   color: #777;
 }
-.createdAt .icon {
+.content-date .icon {
   width: 14px;
 }
-.title {
+.content__title {
   font-size: 40px;
   font-weight: 700;
 }

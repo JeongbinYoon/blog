@@ -1,13 +1,15 @@
 <template>
   <main>
     <LatestPosts />
+    <AllPosts />
   </main>
 </template>
 
 <script>
+import AllPosts from './contents/AllPosts.vue'
 import LatestPosts from './contents/LatestPosts.vue'
 export default {
-  components: { LatestPosts },
+  components: { LatestPosts, AllPosts },
 }
 </script>
 

@@ -1,7 +1,5 @@
 <template>
-  <div class="container">
-    <MainContents />
-  </div>
+  <MainContents />
 </template>
 
 <script>
@@ -14,9 +12,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.container {
-  min-width: 1200px;
-  margin: 0 auto;
-}
-</style>
+<style scoped></style>

@@ -100,7 +100,7 @@ export default {}
   flex-direction: column;
   width: 22%;
   height: 370px;
-  transition: all 0.3s;
+  transition: box-shadow 0.3s, transform 0.3s;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 }
 
