@@ -13,7 +13,7 @@
 export default {}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .anchor {
   width: 10%;
   min-width: 300px;

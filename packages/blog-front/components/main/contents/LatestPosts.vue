@@ -78,58 +78,50 @@
 export default {}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .latest-posts {
   width: 80%;
   max-width: 1200px;
   margin-top: 60px;
-}
-.heading-title {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 20px;
-}
-
-.latest-posts__list {
-  display: flex;
-  justify-content: space-between;
-}
-
-.post {
-  display: flex;
-  flex-direction: column;
-  width: 22%;
-  height: 370px;
-  transition: box-shadow 0.3s, transform 0.3s;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-}
-
-.post:hover {
-  transform: scale(1.005);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-}
-
-.post__bg img {
-  width: 100%;
-}
-
-.post__content {
-  padding: 30px;
-}
-
-.post__title {
-  font-size: 22px;
-}
-
-.post__meta-data {
-  margin-top: auto;
-  padding: 15px 30px;
-  color: #adadad;
-  font-size: 12px;
-  border-top: 1px solid #eaeaea;
-}
-
-.post-date::before {
-  content: ' · ';
+  .heading-title {
+    font-size: $font_size_huge;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  &__list {
+    display: flex;
+    justify-content: space-between;
+  }
+  .post {
+    display: flex;
+    flex-direction: column;
+    width: 22%;
+    height: 370px;
+    transition: box-shadow 0.3s, transform 0.3s;
+    box-shadow: 0 0 10px $color_shadow_grey;
+    &:hover {
+      transform: scale(1.005);
+      box-shadow: 0 0 20px $color_shadow_grey;
+    }
+    &__bg img {
+      width: 100%;
+    }
+    &__content {
+      padding: 30px;
+      .post__title {
+        font-size: $font_size_large;
+      }
+    }
+    &__meta-data {
+      margin-top: auto;
+      padding: 15px 30px;
+      color: $color_light_grey;
+      font-size: $font_size_tiny;
+      border-top: 1px solid $color_border_grey;
+      .post-date::before {
+        content: ' · ';
+      }
+    }
+  }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <span class="content-date">
+    <span class="content__date">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -29,20 +29,20 @@
 export default {}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .content {
   width: 80%;
   flex-shrink: 1;
-}
-.content-date {
-  font-size: 14px;
-  color: #777;
-}
-.content-date .icon {
-  width: 14px;
-}
-.content__title {
-  font-size: 40px;
-  font-weight: 700;
+  &__date {
+    font-size: $font_size_tiny;
+    color: $color_dark_grey;
+    .icon {
+      width: $font_size_small;
+    }
+  }
+  &__title {
+    font-size: $font_size_grand;
+    font-weight: 700;
+  }
 }
 </style>

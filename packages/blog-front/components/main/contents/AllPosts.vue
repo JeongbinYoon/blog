@@ -168,38 +168,35 @@
 export default {}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .all-posts {
   width: 80%;
   margin-top: 60px;
-}
-
-.heading-title {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 20px;
-}
-
-.post {
-  margin-bottom: 50px;
-}
-
-.post__title {
-  font-size: 22px;
-}
-
-.post__meta-data {
-  margin-top: auto;
-  padding: 15px 0 10px 0;
-  color: #adadad;
-  font-size: 12px;
-}
-
-.post__description p {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  color: #777;
+  .heading-title {
+    font-size: $font_size_huge;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  &__list {
+    .post {
+      margin-bottom: 50px;
+      &__title {
+        font-size: $font_size_large;
+      }
+      &__meta-data {
+        margin-top: auto;
+        padding: 15px 0 10px 0;
+        color: $color_light_grey;
+        font-size: $font_size_tiny;
+      }
+      &__description p {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        color: #777;
+      }
+    }
+  }
 }
 </style>

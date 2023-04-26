@@ -13,14 +13,14 @@
 export default {}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 ul {
   display: flex;
-}
-li {
-  margin: 0 20px;
-}
-nav a {
-  color: #fff;
+  li {
+    margin: 0 20px;
+    a {
+      color: #fff;
+    }
+  }
 }
 </style>

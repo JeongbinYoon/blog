@@ -10,7 +10,7 @@
 export default {}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .participants {
   flex-shrink: 0;
   width: 10%;
@@ -18,10 +18,10 @@ export default {}
   height: fit-content;
   margin: 0 20px 0 50px;
   padding: 20px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid $color_border_grey;
   box-sizing: content-box;
-}
-.participants li {
-  margin: 5px 0;
+  li {
+    margin: 5px 0;
+  }
 }
 </style>
