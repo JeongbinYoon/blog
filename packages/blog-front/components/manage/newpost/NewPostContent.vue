@@ -1,35 +1,38 @@
 <template>
   <div>
-    <textarea
-      ref="editor"
-      cols="30"
-      rows="10"
-      @keyup.enter="onSumbit"
-    ></textarea>
-    <!-- <Editor /> -->
+    <div class="editor">
+      <Editor />
+    </div>
     <button @click="onSumbit">Submit</button>
   </div>
 </template>
 
 <script>
-import { groq } from '@nuxtjs/sanity'
-// import Editor from '../../Editor.vue'
+// import { groq } from '@nuxtjs/sanity'
+import Editor from '@/components/Editor/index.vue'
 
-const query = groq`*[_type == "category"]`
+// const query = groq`*[_type == "category"]`
 export default {
   components: {
-    // Editor,
+    Editor,
   },
   methods: {
     async onSumbit() {
-      const value = this.$refs.editor.value
-      console.log(value)
-
-      const response = await this.$sanity.fetch(query)
-      console.log(response)
+      // const response = await this.$sanity.fetch(query)
+      // console.log(response)
     },
   },
 }
 </script>
 
-<style></style>
+<style scoped lang="scss">
+.editor {
+  padding: 2rem;
+  p:focus {
+    outline: none;
+  }
+  div:focus {
+    outline: none;
+  }
+}
+</style>

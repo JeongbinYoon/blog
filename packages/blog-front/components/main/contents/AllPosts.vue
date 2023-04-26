@@ -2,162 +2,16 @@
   <section class="all-posts">
     <h2 class="heading-title">All Posts</h2>
     <ul class="all-posts__list">
-      <li class="post">
-        <h3 class="post__title">
-          <a href="">asdlkasjlkasjkljlksajjas</a>
+      <li v-for="post in $store.state.allPosts" :key="post.id" class="post">
+        <h3 class="post__title" @click="navigate(post.id)">
+          {{ post.title }}
         </h3>
         <div class="post__meta-data">
-          <span class="post-author">asdss</span>
-          <span class="post-date">2023.04.20</span>
+          <span class="post-author">{{ post.author }}</span>
+          <span class="post-date">{{ post.publishedAt?.slice(0, 10) }}</span>
         </div>
         <div class="post__description">
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corrupti
-            eius dolores, totam aut eveniet accusantium nesciunt alias dolorum,
-            ipsam et inventore, repellat veritatis aspernatur omnis quas illo
-            nam placeat vitae?ventore, repellat veritatis aspernatur omnis quas
-            illo nam placeat vitae?ore, repellat veritatis aspernatur omnis quas
-            illo nam placeat vitae?res, totam aut eveniet accusantium nesciunt
-            alias dolorum, ipsam et inventore, repellat veritatis aspernatur
-            omnis quas illo nam placeat vitae?ventore, repellat veritatis
-            aspernatur omnis quas illo nam placeat vi
-          </p>
-        </div>
-      </li>
-      <li class="post">
-        <h3 class="post__title">
-          <a href="">asdlkasjlkasjkljlksajjas</a>
-        </h3>
-        <div class="post__meta-data">
-          <span class="post-author">asdss</span>
-          <span class="post-date">2023.04.20</span>
-        </div>
-        <div class="post__description">
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corrupti
-            eius dolores, totam aut eveniet accusantium nesciunt alias dolorum,
-            ipsam et inventore, repellat velor, sit amet consectetur adipisicing
-            elit. Corrupti eius dolores, totam aut eveniet accusantium nesciunt
-            alias dolorum, ipsam et inventore, repellat veritatis aspernatur
-            omnis quas illo nam placeat vitae?ventore, repellaritatis aspernatur
-            omnis quas illo nam placeat vitae?ventore, repellat veritatis
-            aspernatur omnis quas illo nam placeat vitae?ore, repellat veritatis
-            aspernatur omnis quas illo nam placeat vitae?
-          </p>
-        </div>
-      </li>
-      <li class="post">
-        <h3 class="post__title">
-          <a href="">asdlkasjlkasjkljlksajjas</a>
-        </h3>
-        <div class="post__meta-data">
-          <span class="post-author">asdss</span>
-          <span class="post-date">2023.04.20</span>
-        </div>
-        <div class="post__description">
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corrupti
-            eius dolores, totam aut eveniet accusantium nesciunt alias dolorum,
-            ipsam et inventore, repellat veritatis aspernatur omnis quas illo
-            nam placeat vitae?ventore, repellat veritatis aspernatur omnis quas
-            illo nam placeat vitae?ore, repellat veritatis aspernatur omnis quas
-            illo nam placeat vitae?
-          </p>
-        </div>
-      </li>
-      <li class="post">
-        <h3 class="post__title">
-          <a href="">asdlkasjlkasjkljlksajjas</a>
-        </h3>
-        <div class="post__meta-data">
-          <span class="post-author">asdss</span>
-          <span class="post-date">2023.04.20</span>
-        </div>
-        <div class="post__description">
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corrupti
-            eius dolores, totam aut eveniet accusantium nesciunt alias dolorum,
-            ipsam et inventore, repellat veritatis aspernatur omnis quas illo
-            nam placeat vitae?ventore, repellat veritatis aspernatur omnis quas
-            illo nam placeat vitae?ore, repellat veritatis aspernatur omnis quas
-            illo nam placeat vitae?
-          </p>
-        </div>
-      </li>
-      <li class="post">
-        <h3 class="post__title">
-          <a href="">asdlkasjlkasjkljlksajjas</a>
-        </h3>
-        <div class="post__meta-data">
-          <span class="post-author">asdss</span>
-          <span class="post-date">2023.04.20</span>
-        </div>
-        <div class="post__description">
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corrupti
-            eius dolores, totam aut eveniet accusantium nesciunt alias dolorum,
-            ipsam et inventore, repellat veritatis aspernatur omnis quas illo
-            nam placeat vitae?ventore, repellat veritatis aspernatur omnis quas
-            illo nam placeat vitae?ore, repellat veritatis aspernatur omnis quas
-            illo nam placeat vitae?
-          </p>
-        </div>
-      </li>
-      <li class="post">
-        <h3 class="post__title">
-          <a href="">asdlkasjlkasjkljlksajjas</a>
-        </h3>
-        <div class="post__meta-data">
-          <span class="post-author">asdss</span>
-          <span class="post-date">2023.04.20</span>
-        </div>
-        <div class="post__description">
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corrupti
-            eius dolores, totam aut eveniet accusantium nesciunt alias dolorum,
-            ipsam et inventore, repellat veritatis aspernatur omnis quas illo
-            nam placeat vitae?ventore, repellat veritatis aspernatur omnis quas
-            illo nam placeat vitae?ore, repellat veritatis aspernatur omnis quas
-            illo nam placeat vitae?
-          </p>
-        </div>
-      </li>
-      <li class="post">
-        <h3 class="post__title">
-          <a href="">asdlkasjlkasjkljlksajjas</a>
-        </h3>
-        <div class="post__meta-data">
-          <span class="post-author">asdss</span>
-          <span class="post-date">2023.04.20</span>
-        </div>
-        <div class="post__description">
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corrupti
-            eius dolores, totam aut eveniet accusantium nesciunt alias dolorum,
-            ipsam et inventore, repellat veritatis aspernatur omnis quas illo
-            nam placeat vitae?ventore, repellat veritatis aspernatur omnis quas
-            illo nam placeat vitae?ore, repellat veritatis aspernatur omnis quas
-            illo nam placeat vitae?
-          </p>
-        </div>
-      </li>
-      <li class="post">
-        <h3 class="post__title">
-          <a href="">asdlkasjlkasjkljlksajjas</a>
-        </h3>
-        <div class="post__meta-data">
-          <span class="post-author">asdss</span>
-          <span class="post-date">2023.04.20</span>
-        </div>
-        <div class="post__description">
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corrupti
-            eius dolores, totam aut eveniet accusantium nesciunt alias dolorum,
-            ipsam et inventore, repellat veritatis aspernatur omnis quas illo
-            nam placeat vitae?ventore, repellat veritatis aspernatur omnis quas
-            illo nam placeat vitae?ore, repellat veritatis aspernatur omnis quas
-            illo nam placeat vitae?
-          </p>
+          <p v-html="post.body[0].children[0].text"></p>
         </div>
       </li>
     </ul>
@@ -165,7 +19,22 @@
 </template>
 
 <script>
-export default {}
+import { mapActions } from 'Vuex'
+export default {
+  async mounted() {
+    await this.getAllPosts()
+    console.log(this.$store.state.allPosts)
+  },
+  methods: {
+    navigate(postId) {
+      console.log(this.$router)
+      this.$router.push(`/post/${postId}`)
+    },
+    ...mapActions({
+      getAllPosts: 'getAllPosts',
+    }),
+  },
+}
 </script>
 
 <style lang="scss" scoped>
@@ -182,7 +51,12 @@ export default {}
     .post {
       margin-bottom: 50px;
       &__title {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
         font-size: $font_size_large;
+        cursor: pointer;
       }
       &__meta-data {
         margin-top: auto;
@@ -196,6 +70,7 @@ export default {}
         -webkit-box-orient: vertical;
         overflow: hidden;
         color: #777;
+        line-height: 1.3;
       }
     }
   }

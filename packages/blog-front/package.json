@@ -13,10 +13,12 @@
     "lintfix": "prettier --write --list-different . && yarn lint:js --fix"
   },
   "dependencies": {
-    "@blocknote/core": "^0.6.2",
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/sanity": "0.10.0",
     "@sanity/client": "^5.4.2",
+    "@tiptap/pm": "^2.0.3",
+    "@tiptap/starter-kit": "^2.0.3",
+    "@tiptap/vue-2": "^2.0.3",
     "core-js": "^3.25.3",
     "nuxt": "^2.15.8",
     "sass-loader": "^10",

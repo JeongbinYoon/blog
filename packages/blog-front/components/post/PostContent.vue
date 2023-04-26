@@ -1,5 +1,5 @@
 <template>
-  <div class="post-content">
+  <div v-if="$store.state.currentPost" class="post-content">
     <div class="post-content__meta-data">
       <span class="post-date">
         <svg
@@ -16,7 +16,7 @@
             d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"
           />
         </svg>
-        {{ $store.state.currentPost?._createdAt?.slice(0, 10) }}
+        {{ $store.state.currentPost._createdAt.slice(0, 10) }}
       </span>
       <span class="post-author">
         <svg
@@ -54,23 +54,23 @@
       </span>
     </div>
     <h1 class="post-content__title">{{ $store.state.currentPost.title }}</h1>
-    <div class="post-content__description">
-      {{ $store.state.currentPost.body[0].children[0].text }}
-    </div>
+    <div
+      class="post-content__description"
+      v-html="$store.state.currentPost.body[0].children[0].text"
+    />
+  </div>
+  <div v-else>
+    <p>Post Not Found.</p>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
 export default {
-  async mounted() {
-    await this.getCurrentPost()
-    console.log(this.$store.state.currentPost)
-  },
-  methods: {
-    ...mapActions({
-      getCurrentPost: 'getCurrentPost',
-    }),
+  props: {
+    postId: {
+      type: String,
+      default: '',
+    },
   },
 }
 </script>
@@ -100,6 +100,9 @@ export default {
     font-size: $font_size_grand;
     font-weight: 700;
     margin-bottom: 30px;
+  }
+  &__description {
+    line-height: 1.4;
   }
 }
 </style>
