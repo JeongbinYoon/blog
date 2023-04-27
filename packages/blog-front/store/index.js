@@ -19,10 +19,6 @@ export const mutations = {
   setAllPosts(state, post) {
     state.allPosts = post
   },
-  setCurrentCreatedDocId(state, id) {
-    state.createdDocId = id
-    console.log(`Document was created, ID ${id}`)
-  },
 }
 
 export const actions = {

@@ -114,7 +114,7 @@ export default {}
 <style lang="scss" scoped>
 .latest-posts {
   width: 80%;
-  max-width: $max_width_pc;
+  max-width: 900px;
   margin-top: 60px;
   .heading-title {
     font-size: $font_size_huge;
@@ -136,7 +136,7 @@ export default {}
       box-shadow: 0 0 20px $color_shadow_grey;
     }
     &__bg {
-      min-height: 160px;
+      min-height: 124px;
       overflow: hidden;
       a {
         height: fit-content;
@@ -146,19 +146,19 @@ export default {}
       }
     }
     &__content {
-      padding: 30px;
+      padding: 20px;
       .post__title {
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
         margin: 0;
-        font-size: $font_size_large;
+        font-size: $font_size_medium;
       }
     }
     &__meta-data {
       margin-top: auto;
-      padding: 15px 30px;
+      padding: 15px 20px;
       color: $color_light_grey;
       font-size: $font_size_tiny;
       border-top: 1px solid $color_border_grey;

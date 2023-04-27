@@ -3,8 +3,10 @@
     <h2 class="heading-title">All Posts</h2>
     <ul class="all-posts__list">
       <li v-for="post in $store.state.allPosts" :key="post._id" class="post">
-        <h3 class="post__title" @click="navigate(post._id)">
-          {{ post.title }}
+        <h3 class="post__title">
+          <nuxt-link :to="`/post/${post._id}`">
+            {{ post.title }}
+          </nuxt-link>
         </h3>
         <div class="post__meta-data">
           <span class="post-author">{{ post.author }}</span>
@@ -23,13 +25,9 @@ import { mapActions } from 'Vuex'
 export default {
   async mounted() {
     await this.getAllPosts()
-    console.log(this.$store.state.allPosts, '<<')
+    console.log(this.$store.state.allPosts, '<< All Posts')
   },
   methods: {
-    navigate(postId) {
-      console.log(postId)
-      this.$router.push(`/post/${postId}`)
-    },
     ...mapActions({
       getAllPosts: 'getAllPosts',
     }),
@@ -41,7 +39,7 @@ export default {
 .all-posts {
   width: 80%;
   margin-top: 60px;
-  max-width: $max_width_pc;
+  max-width: 900px;
   .heading-title {
     font-size: $font_size_huge;
     font-weight: 700;

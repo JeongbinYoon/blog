@@ -50,12 +50,16 @@ export default {
       }
       client
         .create(doc)
-        .then((response) =>
-          this.$store.commit('setCurrentCreatedDocId', response._id)
-        )
+        .then((response) => {
+          console.log(response)
+          $nuxt.$emit('alert', {
+            info: 'info',
+            description: '글 생성 완료',
+            type: '알림',
+            callback: () => this.$router.push(`/post/${response._id}`),
+          })
+        })
         .catch((error) => console.error('Error creating document:', error))
-
-      console.log(this.postContent)
     },
   },
 }
