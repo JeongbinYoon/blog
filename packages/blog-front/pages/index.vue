@@ -10,6 +10,9 @@ import AllPosts from '@/components/main/contents/AllPosts.vue'
 import LatestPosts from '@/components/main/contents/LatestPosts.vue'
 export default {
   components: { LatestPosts, AllPosts },
+  async fetch() {
+    await this.$store.dispatch('getRecentPosts')
+  },
 }
 </script>
 

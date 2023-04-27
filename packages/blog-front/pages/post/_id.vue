@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+// import { mapActions } from 'vuex'
 import PostParticipants from '@/components/post/PostParticipants.vue'
 import PostContent from '@/components/post/PostContent.vue'
 import PostAnchor from '@/components/post/PostAnchor.vue'
@@ -22,14 +22,10 @@ export default {
   async fetch({ params, store, redirect }) {
     const { id } = params
     const result = await store.dispatch('getCurrentPost', id)
+    console.log(result)
     if (!result) {
       return redirect('/')
     }
-  },
-  methods: {
-    ...mapActions({
-      getCurrentPost: 'getCurrentPost',
-    }),
   },
 }
 </script>

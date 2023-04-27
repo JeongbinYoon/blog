@@ -18,7 +18,7 @@ export default {}
 <style lang="scss" scoped>
 .main-header {
   display: flex;
-  height: 50px;
+  height: $size_header_height;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;

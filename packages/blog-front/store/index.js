@@ -10,14 +10,18 @@ export const state = () => ({
   },
   allPosts: [],
   createdDocId: '',
+  recentPosts: [],
 })
 
 export const mutations = {
+  setAllPosts(state, posts) {
+    state.allPosts = posts
+  },
+  setRecentPosts(state, posts) {
+    state.recentPosts = posts
+  },
   setCurrentPost(state, post) {
     state.currentPost = post
-  },
-  setAllPosts(state, post) {
-    state.allPosts = post
   },
 }
 
@@ -28,9 +32,16 @@ export const actions = {
     commit('setCurrentPost', data)
     return data
   },
+
   async getAllPosts({ commit }) {
     const query = groq`*[_type == "post"]`
     const data = await this.$sanity.fetch(query)
     commit('setAllPosts', data)
+  },
+  async getRecentPosts({ commit }) {
+    const query = groq`*[_type == "post"] | order(createdAt desc) [0...4]`
+    const data = await this.$sanity.fetch(query)
+    console.log(data)
+    commit('setRecentPosts', data)
   },
 }

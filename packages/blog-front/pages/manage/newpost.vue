@@ -1,15 +1,21 @@
 <template>
   <div class="new-post">
-    <Editor v-model="postTitle" class="new-post__editor editor-title" />
+    <input
+      ref="titleRef"
+      v-model="postTitle"
+      type="text"
+      class="post-title"
+      placeholder="제목 없음"
+    />
     <Editor v-model="postContent" class="new-post__editor editor-content" />
 
-    <div class="new-post__preview">
+    <!-- <div class="new-post__preview">
       <span style="color: #999">Preview</span>
       <pre><code>{{ postTitle }}</code></pre>
       <pre><code>{{ postContent }}</code></pre>
-    </div>
+    </div> -->
 
-    <button @click="onSubmit">Submit</button>
+    <button class="submit-btn" @click="onSubmit">완료</button>
   </div>
 </template>
 
@@ -23,10 +29,12 @@ export default {
   layout: 'newpost',
   data() {
     return {
-      postTitle: 'Enter the title',
-      postContent:
-        '<p>A Vue.js wrapper component for tiptap to use <code>v-model</code>.</p>',
+      postTitle: '',
+      postContent: '<p style="color:#ccc !important">내용을 입력하세요</p>',
     }
+  },
+  mounted() {
+    this.$refs.titleRef.focus()
   },
   methods: {
     onSubmit() {
@@ -63,7 +71,22 @@ export default {
 .new-post {
   width: 90%;
   max-width: 700px;
+  height: calc(100vh - #{$size_header_height});
   margin: 0 auto;
+  position: relative;
+  .post-title {
+    width: 100%;
+    padding: 0;
+    color: #333;
+    font-size: $font_size_huge;
+    font-weight: 700;
+    border: none;
+    outline: none;
+    white-space: wrap;
+    &::placeholder {
+      color: $color_bright_grey;
+    }
+  }
   &__editor {
     ul,
     ol {
@@ -75,32 +98,37 @@ export default {
         outline: none;
       }
     }
-
-    &.editor-title {
-      font-size: $font_size_huge;
-      font-weight: 700;
-    }
   }
-  &__preview {
-    padding: 1rem 0 0;
-
-    h3 {
-      margin: 1rem 0 0.5rem;
-    }
-
-    pre {
-      border-radius: 5px;
-      color: #333;
-    }
-
-    code {
-      display: block;
-      white-space: pre-wrap;
-      font-size: 0.8rem;
-      padding: 0.75rem 1rem;
-      background-color: #e9ecef;
-      color: #495057;
-    }
+  .submit-btn {
+    padding: 7px 20px;
+    background-color: #000;
+    color: #fff;
+    border-radius: 20px;
+    position: absolute;
+    bottom: 30px;
+    right: 0;
+    cursor: pointer;
   }
+  // &__preview {
+  //   padding: 1rem 0 0;
+
+  //   h3 {
+  //     margin: 1rem 0 0.5rem;
+  //   }
+
+  //   pre {
+  //     border-radius: 5px;
+  //     color: #333;
+  //   }
+
+  //   code {
+  //     display: block;
+  //     white-space: pre-wrap;
+  //     font-size: 0.8rem;
+  //     padding: 0.75rem 1rem;
+  //     background-color: #e9ecef;
+  //     color: #495057;
+  //   }
+  // }
 }
 </style>
