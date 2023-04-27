@@ -2,13 +2,13 @@
   <section class="all-posts">
     <h2 class="heading-title">All Posts</h2>
     <ul class="all-posts__list">
-      <li v-for="post in $store.state.allPosts" :key="post.id" class="post">
-        <h3 class="post__title" @click="navigate(post.id)">
+      <li v-for="post in $store.state.allPosts" :key="post._id" class="post">
+        <h3 class="post__title" @click="navigate(post._id)">
           {{ post.title }}
         </h3>
         <div class="post__meta-data">
           <span class="post-author">{{ post.author }}</span>
-          <span class="post-date">{{ post.publishedAt?.slice(0, 10) }}</span>
+          <span class="post-date">{{ post._createdAt.slice(0, 10) }}</span>
         </div>
         <div class="post__description">
           <p v-html="post.body[0].children[0].text"></p>
@@ -23,11 +23,11 @@ import { mapActions } from 'Vuex'
 export default {
   async mounted() {
     await this.getAllPosts()
-    console.log(this.$store.state.allPosts)
+    console.log(this.$store.state.allPosts, '<<')
   },
   methods: {
     navigate(postId) {
-      console.log(this.$router)
+      console.log(postId)
       this.$router.push(`/post/${postId}`)
     },
     ...mapActions({
@@ -48,6 +48,7 @@ export default {
     margin-bottom: 20px;
   }
   &__list {
+    list-style: none;
     .post {
       margin-bottom: 50px;
       &__title {
@@ -55,6 +56,7 @@ export default {
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        margin: 0;
         font-size: $font_size_large;
         cursor: pointer;
       }
@@ -69,8 +71,8 @@ export default {
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        margin: 0;
         color: #777;
-        line-height: 1.3;
       }
     }
   }

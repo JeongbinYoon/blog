@@ -29,6 +29,7 @@ export default {}
     font-size: $font_size_tiny;
   }
   .participants {
+    list-style: none;
     padding-left: 15px;
     li {
       margin: 5px 0;

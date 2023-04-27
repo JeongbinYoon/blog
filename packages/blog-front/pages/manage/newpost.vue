@@ -1,9 +1,12 @@
 <template>
-  <div>
-    <Editor v-model="content" class="editor" />
+  <div class="new-post">
+    <Editor v-model="postTitle" class="new-post__editor editor-title" />
+    <Editor v-model="postContent" class="new-post__editor editor-content" />
 
-    <div class="content">
-      <pre><code>{{ content }}</code></pre>
+    <div class="new-post__preview">
+      <span style="color: #999">Preview</span>
+      <pre><code>{{ postTitle }}</code></pre>
+      <pre><code>{{ postContent }}</code></pre>
     </div>
 
     <button @click="onSubmit">Submit</button>
@@ -17,10 +20,11 @@ export default {
   components: {
     Editor,
   },
-
+  layout: 'newpost',
   data() {
     return {
-      content:
+      postTitle: 'Enter the title',
+      postContent:
         '<p>A Vue.js wrapper component for tiptap to use <code>v-model</code>.</p>',
     }
   },
@@ -34,62 +38,71 @@ export default {
       })
       const doc = {
         _type: 'post',
-        id: 'ccccc',
-        title: 'My awesome blog post',
+        author: 'jeongbin',
+        title: this.postTitle,
         body: [
           {
             _type: 'block',
             style: 'normal',
-            children: [{ _type: 'document', text: this.content }],
+            children: [{ _type: 'document', text: this.postContent }],
           },
         ],
       }
       client
         .create(doc)
         .then((response) =>
-          console.log(`Document was created, ID ${response._id}`)
+          this.$store.commit('setCurrentCreatedDocId', response._id)
         )
         .catch((error) => console.error('Error creating document:', error))
 
-      console.log(this.content)
+      console.log(this.postContent)
     },
   },
 }
 </script>
 
 <style lang="scss">
-.editor {
-  padding: 20px;
-  ul,
-  ol {
-    padding-left: 40px;
-    margin: 16px 0;
+.new-post {
+  width: 90%;
+  max-width: 700px;
+  margin: 0 auto;
+  &__editor {
+    ul,
+    ol {
+      padding-left: 40px;
+      margin: 16px 0;
+    }
+    .ProseMirror {
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &.editor-title {
+      font-size: $font_size_huge;
+      font-weight: 700;
+    }
   }
-}
+  &__preview {
+    padding: 1rem 0 0;
 
-.ProseMirror {
-  padding: 20px;
-}
+    h3 {
+      margin: 1rem 0 0.5rem;
+    }
 
-.content {
-  padding: 1rem 0 0;
+    pre {
+      border-radius: 5px;
+      color: #333;
+    }
 
-  h3 {
-    margin: 1rem 0 0.5rem;
-  }
-
-  pre {
-    border-radius: 5px;
-    color: #333;
-  }
-
-  code {
-    display: block;
-    white-space: pre-wrap;
-    font-size: 0.8rem;
-    padding: 0.75rem 1rem;
-    background-color: #e9ecef;
-    color: #495057;
+    code {
+      display: block;
+      white-space: pre-wrap;
+      font-size: 0.8rem;
+      padding: 0.75rem 1rem;
+      background-color: #e9ecef;
+      color: #495057;
+    }
   }
 }
 </style>

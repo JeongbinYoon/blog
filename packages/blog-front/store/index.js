@@ -9,6 +9,7 @@ export const state = () => ({
     ],
   },
   allPosts: [],
+  createdDocId: '',
 })
 
 export const mutations = {
@@ -18,11 +19,15 @@ export const mutations = {
   setAllPosts(state, post) {
     state.allPosts = post
   },
+  setCurrentCreatedDocId(state, id) {
+    state.createdDocId = id
+    console.log(`Document was created, ID ${id}`)
+  },
 }
 
 export const actions = {
-  async getCurrentPost({ commit }, postId) {
-    const query = groq`*[_type == "post" && id == "${postId}"][0]`
+  async getCurrentPost({ commit }, id) {
+    const query = groq`*[_type == "post" && _id == "${id}"][0]`
     const data = await this.$sanity.fetch(query)
     commit('setCurrentPost', data)
     return data

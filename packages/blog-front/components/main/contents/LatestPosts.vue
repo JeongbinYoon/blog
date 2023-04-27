@@ -129,14 +129,21 @@ export default {}
     display: flex;
     flex-direction: column;
     width: 22%;
-    height: 330px;
+    // height: 330px;
     transition: box-shadow 0.2s;
     box-shadow: 0 0 10px $color_shadow_grey;
     &:hover {
       box-shadow: 0 0 20px $color_shadow_grey;
     }
-    &__bg img {
-      width: 100%;
+    &__bg {
+      min-height: 160px;
+      overflow: hidden;
+      a {
+        height: fit-content;
+      }
+      img {
+        width: 100%;
+      }
     }
     &__content {
       padding: 30px;
@@ -145,6 +152,7 @@ export default {}
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        margin: 0;
         font-size: $font_size_large;
       }
     }

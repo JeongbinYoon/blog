@@ -17,6 +17,7 @@ export default {}
   width: 10%;
   min-width: 200px;
   .anchors {
+    list-style: none;
     padding: 5px 15px;
     border-left: 1.5px solid $color_border_grey;
     position: sticky;
