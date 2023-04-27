@@ -1,5 +1,6 @@
 <template>
   <section class="all-posts">
+    <button @click="removePostsAll">전체 삭제</button>
     <h2 class="heading-title">All Posts</h2>
     <ul class="all-posts__list">
       <li v-for="post in $store.state.allPosts" :key="post._id" class="post">
@@ -22,6 +23,7 @@
 
 <script>
 import { mapActions } from 'Vuex'
+import { client } from '@/api'
 export default {
   async mounted() {
     await this.getAllPosts()
@@ -31,11 +33,27 @@ export default {
     ...mapActions({
       getAllPosts: 'getAllPosts',
     }),
+    removePostsAll() {
+      this.$nuxt.$emit('alert', {
+        type: 'confirm',
+        description: '정말 삭제하시겠습니까?',
+        title: '삭제',
+      })
+      this.$nuxt.$on('alert-confirm', (answer) => {
+        console.log(answer)
+        if (answer) {
+          client
+            .delete({ query: '*[_type == "post"]' })
+            .then(() => this.getAllPosts())
+            .catch((e) => console.log(e))
+        }
+      })
+    },
   },
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .all-posts {
   width: 80%;
   margin-top: 60px;
@@ -70,7 +88,17 @@ export default {
         -webkit-box-orient: vertical;
         overflow: hidden;
         margin: 0;
-        color: #777;
+        color: $color_dark_grey;
+        * {
+          display: inline;
+          margin: 0;
+          padding: 0;
+          color: $color_dark_black;
+          font-size: $font_size_small;
+          font-weight: 400;
+          text-decoration: none;
+          list-style: none;
+        }
       }
     }
   }

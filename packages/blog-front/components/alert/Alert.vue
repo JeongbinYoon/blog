@@ -1,9 +1,22 @@
 <template>
   <Transition name="slide-open" :duration="3000">
-    <div v-if="isOpen" class="alert">
+    <div v-if="isOpen && alertData.type === 'info'" class="alert">
       <p class="alert--content">
         {{ alertData.description }}
       </p>
+    </div>
+    <div v-else-if="isOpen && alertData.type === 'confirm'" class="alert">
+      <p class="alert--content">
+        {{ alertData.description }}
+      </p>
+      <div class="alert__buttons">
+        <button class="alert__buttons-cancel" @click="confirm(false)">
+          취소
+        </button>
+        <button class="alert__buttons-delete" @click="confirm(true)">
+          삭제
+        </button>
+      </div>
     </div>
   </Transition>
 </template>
@@ -18,7 +31,6 @@ export default {
         description: '',
       },
       isOpen: false,
-      states: [{ type: 'create-post', content: '글 생성이 완료되었습니다' }],
     }
   },
   mounted() {
@@ -42,11 +54,19 @@ export default {
       this.alertData.type = type
       this.alertData.description = description
       this.alertData.title = title
-      setTimeout(() => {
-        callback && callback()
-        // this.isOpen = false
-      }, 6000)
+      if (type === 'info') {
+        setTimeout(() => {
+          // callback && callback()
+          this.isOpen = false
+        }, 3000)
+      }
     })
+  },
+  methods: {
+    confirm(answer) {
+      this.$nuxt.$emit('alert-confirm', answer)
+      this.isOpen = false
+    },
   },
 }
 </script>
@@ -56,24 +76,51 @@ export default {
   width: 85%;
   max-width: 250px;
   height: fit-content;
-  padding: 10px 20px;
+  padding: 20px;
   position: fixed;
   top: 5%;
   left: 50%;
+  transition: top 0.3s ease-in-out;
   transform: translateX(-50%);
   background: #fff;
   box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.2);
   .alert--content {
-    font-size: 0.5em;
+    margin: 0;
+    font-size: $font_size_tiny;
   }
   border-radius: 5px;
+  &__buttons {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 20px;
+    > button {
+      font-size: 12px;
+      margin-left: 5px;
+      padding: 5px 15px;
+      background: none;
+      outline: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      &.alert__buttons-delete {
+        background-color: rgb(87, 140, 255);
+        color: #fff;
+      }
+      &.alert__buttons-cancel {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        color: rgb(87, 140, 255);
+      }
+    }
+  }
 }
 .slide-open-enter-active,
 .slide-open-leave-active {
-  transition: top 0.5s ease-in-out;
+  transition: top 0.3s ease-out;
 }
 .slide-open-enter,
 .slide-open-leave-to {
-  top: -20%;
+  top: -150px;
 }
 </style>

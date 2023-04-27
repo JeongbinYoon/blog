@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import { createClient } from '@sanity/client'
 import Editor from '@/components/editor/Editor.vue'
+import { client } from '@/api'
 export default {
   components: {
     Editor,
@@ -30,12 +30,6 @@ export default {
   },
   methods: {
     onSubmit() {
-      const client = createClient({
-        projectId: 'lyvfm7vk',
-        dataset: 'production',
-        useCdn: false,
-        withCredentials: true,
-      })
       const doc = {
         _type: 'post',
         author: 'jeongbin',
@@ -53,10 +47,10 @@ export default {
         .then((response) => {
           console.log(response)
           $nuxt.$emit('alert', {
-            info: 'info',
+            type: 'info',
             description: '글 생성 완료',
-            type: '알림',
-            callback: () => this.$router.push(`/post/${response._id}`),
+            title: '알림',
+            // callback: () => this.$router.push(`/post/${response._id}`),
           })
         })
         .catch((error) => console.error('Error creating document:', error))
