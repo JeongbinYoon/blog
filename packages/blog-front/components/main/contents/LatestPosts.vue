@@ -2,105 +2,20 @@
   <section class="latest-posts">
     <h2 class="heading-title">Latest Posts</h2>
     <ul class="latest-posts__list">
-      <li class="post">
+      <li v-for="post in $store.state.recentPosts" :key="post._id" class="post">
         <div class="post__bg">
-          <a href="">
-            <img
-              src="https://tech.kakao.com/storage/2023/04/techmeet_cover.png"
-              alt=""
-            />
-          </a>
+          <nuxt-link :to="`post/${post._id}`">
+            <img :src="post.mainImage.url" alt="" />
+          </nuxt-link>
         </div>
         <div class="post__content">
           <h3 class="post__title">
-            <a href=""
-              >Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Temporibus aperiam, magni necessitatibus doloribus error
-              praesentium modi, eum consequuntur aliquam voluptatum quibusdam
-              tempore veritatis? Sed aliquid maxime quis, provident corporis
-              qui!</a
-            >
+            <a href="">{{ post.title }}</a>
           </h3>
         </div>
         <div class="post__meta-data">
-          <span class="post-author">author</span>
-          <span class="post-date">2023.04.20</span>
-        </div>
-      </li>
-      <li class="post">
-        <div class="post__bg">
-          <a href="">
-            <img
-              src="https://tech.kakao.com/storage/2023/04/techmeet_cover.png"
-              alt=""
-            />
-          </a>
-        </div>
-        <div class="post__content">
-          <h3 class="post__title">
-            <a href=""
-              >Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Temporibus aperiam, magni necessitatibus doloribus error
-              praesentium modi, eum consequuntur aliquam voluptatum quibusdam
-              tempore veritatis? Sed aliquid maxime quis, provident corporis
-              qui!</a
-            >
-          </h3>
-        </div>
-        <div class="post__meta-data">
-          <span class="post-author">author</span>
-          <span class="post-date">2023.04.20</span>
-        </div>
-      </li>
-
-      <li class="post">
-        <div class="post__bg">
-          <a href="">
-            <img
-              src="https://tech.kakao.com/storage/2023/04/techmeet_cover.png"
-              alt=""
-            />
-          </a>
-        </div>
-        <div class="post__content">
-          <h3 class="post__title">
-            <a href=""
-              >Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Temporibus aperiam, magni necessitatibus doloribus error
-              praesentium modi, eum consequuntur aliquam voluptatum quibusdam
-              tempore veritatis? Sed aliquid maxime quis, provident corporis
-              qui!</a
-            >
-          </h3>
-        </div>
-        <div class="post__meta-data">
-          <span class="post-author">author</span>
-          <span class="post-date">2023.04.20</span>
-        </div>
-      </li>
-      <li class="post">
-        <div class="post__bg">
-          <a href="">
-            <img
-              src="https://tech.kakao.com/storage/2023/04/techmeet_cover.png"
-              alt=""
-            />
-          </a>
-        </div>
-        <div class="post__content">
-          <h3 class="post__title">
-            <a href=""
-              >Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Temporibus aperiam, magni necessitatibus doloribus error
-              praesentium modi, eum consequuntur aliquam voluptatum quibusdam
-              tempore veritatis? Sed aliquid maxime quis, provident corporis
-              qui!</a
-            >
-          </h3>
-        </div>
-        <div class="post__meta-data">
-          <span class="post-author">author</span>
-          <span class="post-date">2023.04.20</span>
+          <span class="post-author">{{ post.author }}</span>
+          <span class="post-date">{{ post._createdAt.slice(0, 10) }}</span>
         </div>
       </li>
     </ul>
@@ -121,12 +36,13 @@
   }
   &__list {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
   }
   .post {
     display: flex;
     flex-direction: column;
     width: 22%;
+    margin-right: 4%;
     // height: 330px;
     transition: box-shadow 0.2s;
     box-shadow: 0 0 10px $color_shadow_grey;
@@ -134,10 +50,11 @@
       box-shadow: 0 0 20px $color_shadow_grey;
     }
     &__bg {
+      height: 124px;
       min-height: 124px;
       overflow: hidden;
       a {
-        height: fit-content;
+        min-height: fit-content;
       }
       img {
         width: 100%;

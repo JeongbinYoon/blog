@@ -8,7 +8,7 @@
       placeholder="제목 없음"
     />
     <Editor v-model="postContent" class="new-post__editor editor-content" />
-
+    <input type="file" @change="file" />
     <!-- <div class="new-post__preview">
       <span style="color: #999">Preview</span>
       <pre><code>{{ postTitle }}</code></pre>
@@ -31,17 +31,30 @@ export default {
     return {
       postTitle: '',
       postContent: '<p style="color:#ccc !important">내용을 입력하세요</p>',
+      imageFile: null,
+      uploadedImgUrl: '',
     }
   },
   mounted() {
     this.$refs.titleRef.focus()
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
+      // 이미지 업로드
+      if (this.imageFile !== null) {
+        this.uploadedImgUrl = await client.assets.upload(
+          'image',
+          this.imageFile
+        )
+      }
+      // console.log(uploadedImg)
+      // console.log(uploadedImg.url)
+
       const doc = {
         _type: 'post',
         author: 'jeongbin',
         title: this.postTitle,
+        mainImage: this.uploadedImgUrl,
         body: [
           {
             _type: 'block',
@@ -50,6 +63,8 @@ export default {
           },
         ],
       }
+
+      // document 업로드
       client
         .create(doc)
         .then((response) => {
@@ -62,6 +77,10 @@ export default {
           })
         })
         .catch((error) => console.error('Error creating document:', error))
+    },
+    file(e) {
+      console.log(e.target.files[0])
+      this.imageFile = e.target.files[0]
     },
   },
 }
