@@ -105,6 +105,11 @@ export default {
       padding-left: 40px;
       margin: 16px 0;
     }
+    .ProseMirror {
+      &:focus {
+        outline: none;
+      }
+    }
   }
   .submit-btn {
     padding: 7px 20px;

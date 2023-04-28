@@ -52,7 +52,7 @@
         </svg>
         {{ $store.state.currentPost.likes }}
       </span>
-      <span class="post-edit" @click="editable = !editable">
+      <span class="post-edit" @click="editPost">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -73,7 +73,7 @@
     </div>
     <div :class="{ edit: editable }">
       <h1 v-if="!editable" class="post-content__title">
-        {{ $store.state.currentPost.title }}
+        {{ postTitle }}
       </h1>
       <input
         v-else
@@ -84,6 +84,7 @@
         placeholder="제목 없음"
       />
       <Editor
+        v-model="postContent"
         :value="$store.state.currentPost.body[0].children[0].text"
         class="post-content__description"
         :editable="editable"
@@ -96,6 +97,7 @@
 </template>
 
 <script>
+import { client } from '@/api'
 export default {
   props: {
     postId: {
@@ -106,7 +108,52 @@ export default {
   data() {
     return {
       editable: false,
+      postTitle: '',
+      postContent: '',
     }
+  },
+  mounted() {
+    this.postTitle = this.$store.state.currentPost.title
+    this.postContent = this.$store.state.currentPost.body[0].children[0].text
+  },
+  methods: {
+    async editPost() {
+      this.editable = !this.editable
+
+      // 저장
+      if (this.editable === false) {
+        console.log(this.postContent)
+
+        const updateData = {
+          title: this.postTitle,
+          body: [
+            {
+              _type: 'block',
+              children: [
+                {
+                  _type: 'document',
+                  text: this.postContent,
+                },
+              ],
+            },
+          ],
+        }
+
+        const patched = await client
+          .patch(this.$store.state.currentPost._id)
+          .set(updateData)
+          .commit()
+        console.dir(patched)
+
+        // document 업로드
+        $nuxt.$emit('alert', {
+          type: 'info',
+          description: '수정이 완료되었습니다',
+          title: '알림',
+          // callback: () => this.$router.push(`/post/${response._id}`),
+        })
+      }
+    },
   },
 }
 </script>

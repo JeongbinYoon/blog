@@ -22,7 +22,6 @@ export default {
   async fetch({ params, store, redirect }) {
     const { id } = params
     const result = await store.dispatch('getCurrentPost', id)
-    console.log(result)
     if (!result) {
       return redirect('/')
     }
