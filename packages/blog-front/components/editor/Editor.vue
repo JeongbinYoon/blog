@@ -1,6 +1,6 @@
 <template>
   <div v-if="editor">
-    <input type="file" @change="addImage" />
+    <input v-if="editable" type="file" @change="addImage" />
     <editor-content :editor="editor" />
   </div>
 </template>
@@ -20,6 +20,10 @@ export default {
       type: String,
       default: '',
     },
+    editable: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   data() {
@@ -29,6 +33,11 @@ export default {
   },
 
   watch: {
+    editable(value) {
+      this.editor?.setOptions?.({
+        editable: value,
+      })
+    },
     value(value) {
       // HTML
       const isSame = this.editor.getHTML() === value
@@ -48,6 +57,7 @@ export default {
     this.editor = new Editor({
       content: this.value,
       extensions: [StarterKit, Image],
+      editable: this.editable,
       onUpdate: () => {
         // HTML
         this.$emit('input', this.editor.getHTML())
@@ -79,3 +89,11 @@ export default {
   },
 }
 </script>
+<style lang="scss">
+.ProseMirror:focus {
+  outline: none;
+}
+img {
+  max-width: 100%;
+}
+</style>

@@ -35,7 +35,7 @@
         </svg>
         {{ $store.state.currentPost.author }}
       </span>
-      <span class="post-like">
+      <span class="post-likes">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -52,12 +52,43 @@
         </svg>
         {{ $store.state.currentPost.likes }}
       </span>
+      <span class="post-edit" @click="editable = !editable">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6 icon"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+          />
+        </svg>
+
+        {{ editable ? '저장' : '수정' }}
+      </span>
     </div>
-    <h1 class="post-content__title">{{ $store.state.currentPost.title }}</h1>
-    <div
-      class="post-content__description"
-      v-html="$store.state.currentPost.body[0].children[0].text"
-    />
+    <div :class="{ edit: editable }">
+      <h1 v-if="!editable" class="post-content__title">
+        {{ $store.state.currentPost.title }}
+      </h1>
+      <input
+        v-else
+        ref="titleRef"
+        v-model="postTitle"
+        type="text"
+        class="post-content__title"
+        placeholder="제목 없음"
+      />
+      <Editor
+        :value="$store.state.currentPost.body[0].children[0].text"
+        class="post-content__description"
+        :editable="editable"
+      />
+    </div>
   </div>
   <div v-else>
     <p>Post Not Found.</p>
@@ -72,14 +103,27 @@ export default {
       default: '',
     },
   },
+  data() {
+    return {
+      editable: false,
+    }
+  },
 }
 </script>
 
 <style lang="scss" scoped>
 .post-content {
-  width: 50%;
+  width: 70%;
   flex-shrink: 1;
   margin: 0 20px;
+  > div {
+    background-color: #fff;
+    transition: background-color 0.5s;
+    &.edit {
+      background-color: $color_post_edit;
+    }
+  }
+
   &__meta-data {
     display: flex;
     font-size: $font_size_tiny;
@@ -94,15 +138,31 @@ export default {
         width: $font_size_small;
         margin-right: 5px;
       }
+      &.post-edit {
+        cursor: pointer;
+      }
     }
   }
   &__title {
+    width: 100%;
+    margin: 0;
+    padding: 20px 20px 0px;
+    background: transparent;
+    color: $color_dark_black;
     font-size: $font_size_grand;
     font-weight: 700;
-    margin-bottom: 30px;
+    border: none;
+    outline: none;
+    white-space: wrap;
+    box-sizing: border-box;
+    &::placeholder {
+      color: $color_bright_grey;
+    }
   }
   &__description {
+    padding: 20px;
     line-height: 1.4;
+    box-sizing: border-box;
   }
 }
 </style>

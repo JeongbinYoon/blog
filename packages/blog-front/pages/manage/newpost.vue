@@ -47,6 +47,7 @@ export default {
         _type: 'post',
         author: 'jeongbin',
         title: this.postTitle,
+        likes: 0,
         mainImage: this.uploadedImgUrl,
         body: [
           {
@@ -103,11 +104,6 @@ export default {
     ol {
       padding-left: 40px;
       margin: 16px 0;
-    }
-    .ProseMirror {
-      &:focus {
-        outline: none;
-      }
     }
   }
   .submit-btn {
