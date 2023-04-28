@@ -5,7 +5,7 @@
       <li v-for="post in $store.state.recentPosts" :key="post._id" class="post">
         <div class="post__bg">
           <nuxt-link :to="`post/${post._id}`">
-            <img :src="post.mainImage.url" alt="" />
+            <img :src="post.mainImage" alt="" />
           </nuxt-link>
         </div>
         <div class="post__content">

@@ -14,7 +14,7 @@
           <span class="post-date">{{ post._createdAt.slice(0, 10) }}</span>
         </div>
         <div class="post__description">
-          <p v-html="post.body[0].children[0].text"></p>
+          <p>{{ post.body[0].children[0].text }}</p>
         </div>
       </li>
     </ul>

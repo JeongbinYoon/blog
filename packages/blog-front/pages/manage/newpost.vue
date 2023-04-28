@@ -7,8 +7,11 @@
       class="post-title"
       placeholder="제목 없음"
     />
-    <Editor v-model="postContent" class="new-post__editor editor-content" />
-    <input type="file" @change="file" />
+    <Editor
+      v-model="postContent"
+      class="new-post__editor editor-content"
+      @addImage="addImageUrl"
+    />
     <!-- <div class="new-post__preview">
       <span style="color: #999">Preview</span>
       <pre><code>{{ postTitle }}</code></pre>
@@ -39,17 +42,7 @@ export default {
     this.$refs.titleRef.focus()
   },
   methods: {
-    async onSubmit() {
-      // 이미지 업로드
-      if (this.imageFile !== null) {
-        this.uploadedImgUrl = await client.assets.upload(
-          'image',
-          this.imageFile
-        )
-      }
-      // console.log(uploadedImg)
-      // console.log(uploadedImg.url)
-
+    onSubmit() {
       const doc = {
         _type: 'post',
         author: 'jeongbin',
@@ -78,9 +71,8 @@ export default {
         })
         .catch((error) => console.error('Error creating document:', error))
     },
-    file(e) {
-      console.log(e.target.files[0])
-      this.imageFile = e.target.files[0]
+    addImageUrl(url) {
+      this.uploadedImgUrl = url
     },
   },
 }
