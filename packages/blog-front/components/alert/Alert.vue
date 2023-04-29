@@ -1,10 +1,23 @@
 <template>
   <Transition name="slide-open" :duration="3000">
-    <div v-if="isOpen && alertData.type === 'info'" class="alert">
+    <!-- Info -->
+    <div v-if="isOpen && alertData.type === 'info'" class="alert info">
       <p class="alert--content">
         {{ alertData.description }}
       </p>
     </div>
+
+    <!-- Warning -->
+    <div
+      v-else-if="isOpen && alertData.type === 'warning'"
+      class="alert warning"
+    >
+      <p class="alert--content">
+        {{ alertData.description }}
+      </p>
+    </div>
+
+    <!-- Confirm  -->
     <div v-else-if="isOpen && alertData.type === 'confirm'" class="alert">
       <p class="alert--content">
         {{ alertData.description }}
@@ -54,7 +67,7 @@ export default {
       this.alertData.type = type
       this.alertData.description = description
       this.alertData.title = title
-      if (type === 'info') {
+      if (type === 'info' || type === 'warning') {
         setTimeout(() => {
           // callback && callback()
           this.isOpen = false
@@ -84,6 +97,16 @@ export default {
   transform: translateX(-50%);
   background: #fff;
   box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.2);
+  &.info {
+    color: #47ac51;
+    background-color: #e3fde1;
+    box-shadow: 0px 3px 4px rgba(108, 170, 92, 0.3);
+  }
+  &.warning {
+    color: #eb5757;
+    background-color: #fdf5f2;
+    box-shadow: 0px 3px 4px rgba(227, 88, 88, 0.3);
+  }
   .alert--content {
     margin: 0;
     font-size: $font_size_tiny;

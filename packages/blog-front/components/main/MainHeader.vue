@@ -5,7 +5,7 @@
       <ul>
         <li><a href="">Post</a></li>
         <li><nuxt-link to="/manage/newpost">글쓰기</nuxt-link></li>
-        <!-- <li><a href="">로그인</a></li> -->
+        <li><nuxt-link to="/login">로그인</nuxt-link></li>
       </ul>
     </nav>
   </header>
