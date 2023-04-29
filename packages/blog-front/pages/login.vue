@@ -8,21 +8,24 @@
         v-model="userEmail"
         type="text"
         placeholder="아이디(이메일)"
+        @input="removeFocus"
       />
       <!-- 비밀번호 -->
       <input
-        ref="passwordRef"
+        ref="userPasswordRef"
         v-model="userPassword"
         type="password"
         placeholder="비밀번호"
+        @input="removeFocus"
       />
       <!-- 비밀번호 확인 -->
       <input
         v-if="isJoin"
-        ref="passwordCheckRef"
+        ref="userPasswordCheckRef"
         v-model="userPasswordCheck"
         type="password"
         placeholder="비밀번호 확인"
+        @input="removeFocus"
       />
 
       <button
@@ -83,8 +86,12 @@ export default {
       let description = ''
       if (this.userEmail === '') {
         description = '아이디를 입력해주세요'
+        this.$refs.emailRef.focus()
+        this.$refs.emailRef.classList.add('warning')
       } else if (this.userPassword === '') {
         description = '비밀번호를 입력해주세요'
+        this.$refs.userPasswordRef.focus()
+        this.$refs.userPasswordRef.classList.add('warning')
       } else if (this.userEmail && this.userPassword) {
         description = '로그인 성공'
       }
@@ -105,10 +112,21 @@ export default {
       let description = ''
       if (this.userEmail === '') {
         description = '아이디를 입력해주세요'
+        this.$refs.emailRef.focus()
+        this.$refs.emailRef.classList.add('warning')
       } else if (this.userPassword === '' || this.userPasswordCheck === '') {
         description = '비밀번호를 입력해주세요'
+        if (this.userPassword === '') {
+          this.$refs.userPasswordRef.focus()
+          this.$refs.userPasswordRef.classList.add('warning')
+        } else {
+          this.$refs.userPasswordCheckRef.focus()
+          this.$refs.userPasswordCheckRef.classList.add('warning')
+        }
       } else if (!this.passwordChecked) {
         description = '비밀번호가 다릅니다'
+        this.$refs.userPasswordRef.focus()
+        this.$refs.userPasswordRef.classList.add('warning')
       } else if (this.userEmail && this.userPassword && this.passwordChecked) {
         description = '회원가입이 완료되었습니다'
       }
@@ -127,6 +145,9 @@ export default {
       this.userEmail = ''
       this.userPassword = ''
       this.userPasswordCheck = ''
+    },
+    removeFocus(e) {
+      e.target.classList.remove('warning')
     },
   },
 }
@@ -155,6 +176,8 @@ export default {
       border-radius: 5px;
       box-sizing: border-box;
       color: #777;
+      outline: none;
+
       &.login__form--login {
         background-color: #f3f3f3;
         border-color: #eaeaea;
@@ -174,7 +197,12 @@ export default {
           box-shadow: inset 0 -1px 0 rgba(227, 88, 88, 0.3);
         }
       }
+
+      &.warning:focus {
+        border: 1px solid #eb5757;
+      }
     }
+
     &--separator {
       border-bottom: 1px solid #ccc;
       margin: 20px 0;
