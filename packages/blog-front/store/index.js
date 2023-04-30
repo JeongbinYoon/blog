@@ -12,6 +12,7 @@ export const state = () => ({
   createdDocId: '',
   recentPosts: [],
   isExistingEmail: false,
+  isLoginAllowed: false,
 })
 
 export const mutations = {
@@ -26,6 +27,9 @@ export const mutations = {
   },
   setCheckUserEmail(state, answer) {
     state.isExistingEmail = answer
+  },
+  setIsLoginAllowed(state, answer) {
+    state.isLoginAllowed = answer
   },
 }
 
@@ -55,5 +59,16 @@ export const actions = {
     const data = await this.$sanity.fetch(query)
     const answer = !!data
     commit('setCheckUserEmail', answer)
+  },
+  async checkUserAccount({ commit }, { userEmail, userPassword }) {
+    const query = groq`*[_type == "users" && userEmail == "${userEmail}"][0]`
+    const data = await this.$sanity.fetch(query)
+    let answer = false
+    if (data) {
+      userPassword === data.userPassword ? (answer = true) : (answer = false)
+    } else {
+      console.log('계정없음')
+    }
+    commit('setIsLoginAllowed', answer)
   },
 }

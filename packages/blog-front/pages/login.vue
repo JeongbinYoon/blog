@@ -88,7 +88,7 @@ export default {
     }
   },
   methods: {
-    onLogin() {
+    async onLogin() {
       let type = ''
       if (this.userEmail !== '' && this.userPassword !== '') {
         type = 'info'
@@ -104,10 +104,21 @@ export default {
         this.$refs.userPasswordRef.focus()
         this.$refs.userPasswordRef.classList.add('warning')
       } else if (this.userEmail && this.userPassword) {
-        description = '로그인 성공'
+        await this.$store.dispatch('checkUserAccount', {
+          userEmail: this.userEmail,
+          userPassword: this.userPassword,
+        })
+        const isLoginAllowed = this.$store.state.isLoginAllowed
+        if (isLoginAllowed) {
+          description = '로그인 성공'
+        } else {
+          type = 'warning'
+          description = '아이디, 비밀번호를 다시 확인해주세요'
+        }
       }
       this.onAlert(type, description)
     },
+
     async onJoin() {
       this.passwordChecked = this.userPassword === this.userPasswordCheck
       let type = ''
