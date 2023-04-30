@@ -11,6 +11,7 @@ export const state = () => ({
   allPosts: [],
   createdDocId: '',
   recentPosts: [],
+  isExistingEmail: false,
 })
 
 export const mutations = {
@@ -22,6 +23,9 @@ export const mutations = {
   },
   setCurrentPost(state, post) {
     state.currentPost = post
+  },
+  setCheckUserEmail(state, answer) {
+    state.isExistingEmail = answer
   },
 }
 
@@ -38,10 +42,18 @@ export const actions = {
     const data = await this.$sanity.fetch(query)
     commit('setAllPosts', data)
   },
+
   async getRecentPosts({ commit }) {
     const query = groq`*[_type == "post"] | order(_createdAt desc) [0...4]`
     const data = await this.$sanity.fetch(query)
     console.log(data)
     commit('setRecentPosts', data)
+  },
+
+  async checkUserEmail({ commit }, userEmail) {
+    const query = groq`*[_type == "users" && userEmail == "${userEmail}"][0]`
+    const data = await this.$sanity.fetch(query)
+    const answer = !!data
+    commit('setCheckUserEmail', answer)
   },
 }

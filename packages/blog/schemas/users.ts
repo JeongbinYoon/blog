@@ -11,6 +11,11 @@ export default defineType({
       type: 'string',
     }),
     defineField({
+      name: 'userName',
+      title: 'UserPName',
+      type: 'string',
+    }),
+    defineField({
       name: 'userPassword',
       title: 'UserPassword',
       type: 'string',

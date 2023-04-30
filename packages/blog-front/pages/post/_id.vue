@@ -7,7 +7,6 @@
 </template>
 
 <script>
-// import { mapActions } from 'vuex'
 import PostParticipants from '@/components/post/PostParticipants.vue'
 import PostContent from '@/components/post/PostContent.vue'
 import PostAnchor from '@/components/post/PostAnchor.vue'
