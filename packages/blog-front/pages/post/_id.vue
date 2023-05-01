@@ -7,23 +7,37 @@
 </template>
 
 <script>
+import { mapMutations } from 'Vuex'
 import PostParticipants from '@/components/post/PostParticipants.vue'
 import PostContent from '@/components/post/PostContent.vue'
 import PostAnchor from '@/components/post/PostAnchor.vue'
 
 export default {
-  laytout: 'default',
   components: {
     PostParticipants,
     PostContent,
     PostAnchor,
   },
+  layout: 'default',
+
   async fetch({ params, store, redirect }) {
     const { id } = params
     const result = await store.dispatch('getCurrentPost', id)
     if (!result) {
       return redirect('/')
     }
+  },
+  async mounted() {
+    const userId = sessionStorage.getItem('userId')
+    if (userId) {
+      await this.setUserId(userId)
+    }
+    await this.$store.dispatch('getUserInfo', this.$store.state.userId)
+  },
+  methods: {
+    ...mapMutations({
+      setUserId: 'setUserId',
+    }),
   },
 }
 </script>

@@ -1,3 +1,4 @@
+/
 <template>
   <div v-if="$store.state.currentPost" class="post-content">
     <div class="post-content__meta-data">
@@ -33,7 +34,7 @@
             d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
           />
         </svg>
-        {{ $store.state.currentPost.author }}
+        {{ authorName }}
       </span>
       <span class="post-likes">
         <svg
@@ -52,7 +53,7 @@
         </svg>
         {{ $store.state.currentPost.likes }}
       </span>
-      <span class="post-edit" @click="editPost">
+      <span v-if="editPostAllowed" class="post-edit" @click="editPost">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -97,24 +98,40 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { client } from '@/api'
 export default {
-  props: {
-    postId: {
-      type: String,
-      default: '',
-    },
-  },
   data() {
     return {
+      editPostAllowed: false,
       editable: false,
       postTitle: '',
       postContent: '',
+      authorId: '',
+      authorName: '',
+      currentUserInfo: null,
     }
+  },
+  computed: {
+    ...mapState(['userInfo']),
+  },
+  watch: {
+    userInfo: {
+      handler(newUserInfo) {
+        console.log(newUserInfo)
+        if (newUserInfo) {
+          if (newUserInfo._id === this.authorId) {
+            this.editPostAllowed = true
+          }
+        } else this.editPostAllowed = false
+      },
+    },
   },
   mounted() {
     this.postTitle = this.$store.state.currentPost.title
     this.postContent = this.$store.state.currentPost.body[0].children[0].text
+    this.authorId = this.$store.state.currentPost.author_id
+    this.authorName = this.$store.state.currentPost.author_name
   },
   methods: {
     async editPost() {
@@ -122,8 +139,6 @@ export default {
 
       // 저장
       if (this.editable === false) {
-        console.log(this.postContent)
-
         const updateData = {
           title: this.postTitle,
           body: [

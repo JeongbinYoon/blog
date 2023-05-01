@@ -10,7 +10,7 @@
           </nuxt-link>
         </h3>
         <div class="post__meta-data">
-          <span class="post-author">{{ post.author }}</span>
+          <span class="post-author">{{ post.author_name }}</span>
           <span class="post-date">{{ post._createdAt.slice(0, 10) }}</span>
         </div>
         <div class="post__description">

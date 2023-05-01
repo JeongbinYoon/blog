@@ -42,10 +42,14 @@ export default {
     this.$refs.titleRef.focus()
   },
   methods: {
-    onSubmit() {
-      const doc = {
+    async onSubmit() {
+      const userId = this.$store.state.userId
+      await this.$store.dispatch('getUserInfo', userId)
+
+      const newPost = {
         _type: 'post',
-        author: 'jeongbin',
+        author_name: this.$store.state.userInfo.userName,
+        author_id: this.$store.state.userInfo._id,
         title: this.postTitle,
         likes: 0,
         mainImage: this.uploadedImgUrl,
@@ -60,7 +64,7 @@ export default {
 
       // document 업로드
       client
-        .create(doc)
+        .create(newPost)
         .then((response) => {
           console.log(response)
           $nuxt.$emit('alert', {

@@ -13,6 +13,7 @@ export const state = () => ({
   recentPosts: [],
   isExistingEmail: false,
   userId: null,
+  userInfo: null,
 })
 
 export const mutations = {
@@ -30,6 +31,9 @@ export const mutations = {
   },
   setUserId(state, userId) {
     state.userId = userId
+  },
+  setUserInfo(state, userInfo) {
+    state.userInfo = userInfo
   },
 }
 
@@ -60,7 +64,7 @@ export const actions = {
     const answer = !!data
     commit('setCheckUserEmail', answer)
   },
-  async checkUserAccount({ commit }, { userEmail, userPassword }) {
+  async checkUserAccount(_, { userEmail, userPassword }) {
     const query = groq`*[_type == "users" && userEmail == "${userEmail}"][0]`
     const data = await this.$sanity.fetch(query)
     let isLoginAllowed = false
@@ -80,9 +84,16 @@ export const actions = {
   login({ commit }, userId) {
     sessionStorage.setItem('userId', userId)
     commit('setUserId', userId)
+    this.dispatch('getUserInfo', userId)
   },
   logout({ commit }) {
     sessionStorage.removeItem('userId')
     commit('setUserId', null)
+    commit('setUserInfo', null)
+  },
+  async getUserInfo({ commit }, userId) {
+    const query = groq`*[_type == "users" && _id == "${userId}"][0]`
+    const data = await this.$sanity.fetch(query)
+    commit('setUserInfo', data)
   },
 }
