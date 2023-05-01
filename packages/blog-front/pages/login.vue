@@ -108,8 +108,8 @@ export default {
           userEmail: this.userEmail,
           userPassword: this.userPassword,
         })
-        const isLoginAllowed = this.$store.state.isLoginAllowed
-        if (isLoginAllowed) {
+        const userId = this.$store.state.userId
+        if (userId) {
           description = '로그인 성공'
         } else {
           type = 'warning'

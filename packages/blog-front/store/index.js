@@ -12,7 +12,7 @@ export const state = () => ({
   createdDocId: '',
   recentPosts: [],
   isExistingEmail: false,
-  isLoginAllowed: false,
+  userId: null,
 })
 
 export const mutations = {
@@ -28,8 +28,8 @@ export const mutations = {
   setCheckUserEmail(state, answer) {
     state.isExistingEmail = answer
   },
-  setIsLoginAllowed(state, answer) {
-    state.isLoginAllowed = answer
+  setUserId(state, userId) {
+    state.userId = userId
   },
 }
 
@@ -63,12 +63,26 @@ export const actions = {
   async checkUserAccount({ commit }, { userEmail, userPassword }) {
     const query = groq`*[_type == "users" && userEmail == "${userEmail}"][0]`
     const data = await this.$sanity.fetch(query)
-    let answer = false
+    let isLoginAllowed = false
+
+    // 요청한 Email에 대한 계정이 있는 경우 비밀번호 확인
     if (data) {
-      userPassword === data.userPassword ? (answer = true) : (answer = false)
-    } else {
-      console.log('계정없음')
+      userPassword === data.userPassword
+        ? (isLoginAllowed = true)
+        : (isLoginAllowed = false)
     }
-    commit('setIsLoginAllowed', answer)
+
+    // email, password OK
+    if (isLoginAllowed) {
+      this.dispatch('login', data._id)
+    }
+  },
+  login({ commit }, userId) {
+    sessionStorage.setItem('userId', userId)
+    commit('setUserId', userId)
+  },
+  logout({ commit }) {
+    sessionStorage.removeItem('userId')
+    commit('setUserId', null)
   },
 }

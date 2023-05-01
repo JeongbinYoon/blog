@@ -5,14 +5,28 @@
       <ul>
         <li><a href="">Post</a></li>
         <li><nuxt-link to="/manage/newpost">글쓰기</nuxt-link></li>
-        <li><nuxt-link to="/login">로그인</nuxt-link></li>
+        <li v-if="!userId">
+          <nuxt-link to="/login">로그인</nuxt-link>
+        </li>
+        <li v-else @click="onLogout">로그아웃</li>
       </ul>
     </nav>
   </header>
 </template>
 
 <script>
-export default {}
+export default {
+  computed: {
+    userId() {
+      return this.$store.state.userId
+    },
+  },
+  methods: {
+    onLogout() {
+      this.$store.dispatch('logout')
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
@@ -36,6 +50,9 @@ export default {}
       > li {
         margin: 0 20px;
         font-size: $font_size_small;
+        color: $color_header_white;
+        cursor: pointer;
+
         a {
           color: $color_header_white;
         }
