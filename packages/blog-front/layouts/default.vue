@@ -2,7 +2,7 @@
   <div>
     <MainHeader />
     <Nuxt />
-    <MainFooter />
+    <!-- <MainFooter /> -->
     <Alert key="alert" />
   </div>
 </template>

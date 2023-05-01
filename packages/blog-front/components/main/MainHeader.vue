@@ -3,8 +3,7 @@
     <h1 class="main-header__logo"><nuxt-link to="/">logo</nuxt-link></h1>
     <nav class="main-header__nav">
       <ul>
-        <li><a href="">Post</a></li>
-        <li><nuxt-link to="/manage/newpost">글쓰기</nuxt-link></li>
+        <li @click="goToNewPost">글쓰기</li>
         <li v-if="!userId">
           <nuxt-link to="/login">로그인</nuxt-link>
         </li>
@@ -24,6 +23,11 @@ export default {
   methods: {
     onLogout() {
       this.$store.dispatch('logout')
+    },
+    goToNewPost() {
+      this.userId
+        ? this.$router.push('/manage/newpost')
+        : this.$router.push('/login')
     },
   },
 }

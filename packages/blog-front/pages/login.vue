@@ -241,6 +241,9 @@ export default {
           margin-bottom: 0;
           box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
         }
+        &:focus {
+          box-shadow: inset 0 -2px 6px rgba(0, 0, 0, 0.1);
+        }
       }
       &.login__form--join {
         background-color: #fdf5f2;
@@ -250,6 +253,9 @@ export default {
         &.active {
           margin-bottom: 0;
           box-shadow: inset 0 -1px 0 rgba(227, 88, 88, 0.3);
+        }
+        &:focus {
+          box-shadow: inset 0 -2px 6px rgba(227, 88, 88, 0.2);
         }
       }
 

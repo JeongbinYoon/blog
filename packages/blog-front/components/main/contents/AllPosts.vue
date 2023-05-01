@@ -14,7 +14,7 @@
           <span class="post-date">{{ post._createdAt.slice(0, 10) }}</span>
         </div>
         <div class="post__description">
-          <p>{{ post.body[0].children[0].text }}</p>
+          <p v-html="post.body[0].children[0].text"></p>
         </div>
       </li>
     </ul>
@@ -32,6 +32,7 @@ export default {
   methods: {
     ...mapActions({
       getAllPosts: 'getAllPosts',
+      getRecentPosts: 'getRecentPosts',
     }),
     removePostsAll() {
       this.$nuxt.$emit('alert', {
@@ -39,13 +40,12 @@ export default {
         description: '정말 삭제하시겠습니까?',
         title: '삭제',
       })
-      this.$nuxt.$on('alert-confirm', (answer) => {
+      this.$nuxt.$on('alert-confirm', async (answer) => {
         console.log(answer)
         if (answer) {
-          client
-            .delete({ query: '*[_type == "post"]' })
-            .then(() => this.getAllPosts())
-            .catch((e) => console.log(e))
+          await client.delete({ query: '*[_type == "post"]' })
+          await this.getAllPosts()
+          await this.getRecentPosts()
         }
       })
     },
@@ -101,6 +101,11 @@ export default {
         }
       }
     }
+  }
+}
+@media (max-width: 767px) {
+  .all-posts {
+    width: 100%;
   }
 }
 </style>

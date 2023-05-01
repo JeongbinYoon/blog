@@ -52,7 +52,7 @@ export const actions = {
   },
 
   async getRecentPosts({ commit }) {
-    const query = groq`*[_type == "post"] | order(_createdAt desc) [0...4]`
+    const query = groq`*[_type == "post"] | order(_createdAt desc) [0...3]`
     const data = await this.$sanity.fetch(query)
     console.log(data)
     commit('setRecentPosts', data)
