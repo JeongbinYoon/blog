@@ -52,7 +52,7 @@ export default {
       }
 
       await this.$store.dispatch('getUserInfo', userId)
-
+      // eEHi4U6xNIJxa0XEaCAGKktP
       const newPost = {
         _type: 'post',
         author_name: this.$store.state.userInfo.userName,

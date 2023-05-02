@@ -53,6 +53,9 @@ export default {
   sanity: {
     projectId: 'lyvfm7vk',
     apiVersion: '2023-04-25',
-    apiHost: 'https://blog-sanity-gyfw5fdf0-jeongbinyoon.vercel.app/',
+  },
+  server: {
+    host: '0',
+    port: '3000', // optional
   },
 }
