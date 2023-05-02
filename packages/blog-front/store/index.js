@@ -1,4 +1,5 @@
 import { groq } from '@nuxtjs/sanity'
+
 import Cookie from 'js-cookie'
 export const state = () => ({
   currentPost: {
