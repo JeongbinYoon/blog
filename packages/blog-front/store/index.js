@@ -40,12 +40,15 @@ export const mutations = {
 export const actions = {
   async nuxtServerInit({ dispatch }, { req }) {
     const cookies = req?.headers?.cookie
+    console.log(cookies)
+    console.log(req?.headers, 'req?.headers')
     if (cookies) {
       const cookieObj = req.headers.cookie?.split(';').reduce((acc, cur) => {
         const cookie = cur.split('=').map((item) => item.trim())
         return cookie?.length ? { ...acc, [cookie[0]]: cookie[1] } : { ...acc }
       }, {})
       if (cookieObj) {
+        console.log(cookieObj, 'cookieObj')
         const userId = cookieObj?.userId
         if (userId) {
           await dispatch('login', userId)
@@ -108,6 +111,7 @@ export const actions = {
     const query = groq`*[_type == "users" && _id == "${userId}"][0]`
     try {
       const data = await this.$sanity.fetch(query)
+      console.log(data)
       if (data) {
         commit('setUserInfo', data)
         commit('setUserId', userId)
