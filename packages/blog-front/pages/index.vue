@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'Vuex'
+import { mapMutations } from 'vuex'
 import AllPosts from '@/components/main/contents/AllPosts.vue'
 import LatestPosts from '@/components/main/contents/LatestPosts.vue'
 export default {

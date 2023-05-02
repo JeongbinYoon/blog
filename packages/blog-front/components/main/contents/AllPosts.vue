@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapActions } from 'Vuex'
+import { mapActions } from 'vuex'
 import { client } from '@/api'
 export default {
   async mounted() {
