@@ -53,7 +53,7 @@
         </svg>
         {{ $store.state.currentPost.likes }}
       </span>
-      <span v-if="editPostAllowed" class="post-edit" @click="editPost">
+      <span v-if="isOwner" class="post-edit" @click="editPost">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -71,7 +71,7 @@
 
         {{ editable ? '저장' : '수정' }}
       </span>
-      <span v-if="editPostAllowed" class="post-edit" @click="deletePost">
+      <span v-if="isOwner" class="post-edit" @click="deletePost">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -130,8 +130,18 @@ export default {
       currentUserInfo: null,
     }
   },
+  fetch() {
+    this.postId = this.$store.state.currentPost._id
+    this.postTitle = this.$store.state.currentPost.title
+    this.postContent = this.$store.state.currentPost.body[0].children[0].text
+    this.authorId = this.$store.state.currentPost.author_id
+    this.authorName = this.$store.state.currentPost.author_name
+  },
   computed: {
-    ...mapState(['userInfo']),
+    ...mapState(['userInfo', 'userId']),
+    isOwner() {
+      return this.userId === this.$store.state.currentPost.author_id
+    },
   },
   watch: {
     userInfo: {
@@ -145,13 +155,7 @@ export default {
       },
     },
   },
-  mounted() {
-    this.postId = this.$store.state.currentPost._id
-    this.postTitle = this.$store.state.currentPost.title
-    this.postContent = this.$store.state.currentPost.body[0].children[0].text
-    this.authorId = this.$store.state.currentPost.author_id
-    this.authorName = this.$store.state.currentPost.author_name
-  },
+
   methods: {
     async editPost() {
       this.editable = !this.editable
@@ -231,6 +235,7 @@ export default {
     font-size: $font_size_tiny;
     color: $color_dark_grey;
     margin-bottom: 15px;
+    padding: 0 20px;
     > span {
       display: flex;
       align-items: center;

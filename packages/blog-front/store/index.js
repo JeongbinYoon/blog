@@ -1,5 +1,5 @@
 import { groq } from '@nuxtjs/sanity'
-
+import Cookie from 'js-cookie'
 export const state = () => ({
   currentPost: {
     body: [
@@ -38,6 +38,21 @@ export const mutations = {
 }
 
 export const actions = {
+  async nuxtServerInit({ dispatch }, { req }) {
+    const cookies = req.headers.cookie
+    if (cookies) {
+      const cookieObj = req.headers.cookie?.split(';').reduce((acc, cur) => {
+        const cookie = cur.split('=').map((item) => item.trim())
+        return cookie?.length ? { ...acc, [cookie[0]]: cookie[1] } : { ...acc }
+      }, {})
+      if (cookieObj) {
+        const userId = cookieObj?.userId
+        if (userId) {
+          await dispatch('login', userId)
+        }
+      }
+    }
+  },
   async getCurrentPost({ commit }, id) {
     const query = groq`*[_type == "post" && _id == "${id}"][0]`
     const data = await this.$sanity.fetch(query)
@@ -54,7 +69,6 @@ export const actions = {
   async getRecentPosts({ commit }) {
     const query = groq`*[_type == "post"] | order(_createdAt desc) [0...3]`
     const data = await this.$sanity.fetch(query)
-    console.log(data)
     commit('setRecentPosts', data)
   },
 
@@ -64,9 +78,10 @@ export const actions = {
     const answer = !!data
     commit('setCheckUserEmail', answer)
   },
-  async checkUserAccount(_, { userEmail, userPassword }) {
+  async checkUserAccount({ dispatch }, { userEmail, userPassword }) {
     const query = groq`*[_type == "users" && userEmail == "${userEmail}"][0]`
     const data = await this.$sanity.fetch(query)
+    console.log(data, '<<<<<data')
     let isLoginAllowed = false
 
     // 요청한 Email에 대한 계정이 있는 경우 비밀번호 확인
@@ -78,22 +93,31 @@ export const actions = {
 
     // email, password OK
     if (isLoginAllowed) {
-      this.dispatch('login', data._id)
+      await dispatch('login', data._id)
     }
   },
-  login({ commit }, userId) {
-    sessionStorage.setItem('userId', userId)
-    commit('setUserId', userId)
-    this.dispatch('getUserInfo', userId)
+  async login({ dispatch }, userId) {
+    await dispatch('getUserInfo', userId)
   },
   logout({ commit }) {
-    sessionStorage.removeItem('userId')
+    Cookie.remove('userId')
     commit('setUserId', null)
     commit('setUserInfo', null)
   },
   async getUserInfo({ commit }, userId) {
     const query = groq`*[_type == "users" && _id == "${userId}"][0]`
-    const data = await this.$sanity.fetch(query)
-    commit('setUserInfo', data)
+    try {
+      const data = await this.$sanity.fetch(query)
+      if (data) {
+        commit('setUserInfo', data)
+        commit('setUserId', userId)
+        Cookie.set('userId', userId)
+      } else {
+        throw new Error('user not found.')
+      }
+    } catch (err) {
+      console.error(err, 'ERROR')
+      Cookie.remove('userId')
+    }
   },
 }

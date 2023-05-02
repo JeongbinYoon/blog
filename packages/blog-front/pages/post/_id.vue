@@ -27,12 +27,8 @@ export default {
       return redirect('/')
     }
   },
-  async mounted() {
-    const userId = sessionStorage.getItem('userId')
-    if (userId) {
-      await this.setUserId(userId)
-    }
-    await this.$store.dispatch('getUserInfo', this.$store.state.userId)
+  mounted() {
+    this.$store.dispatch('getUserInfo', this.$store.state.userId)
   },
   methods: {
     ...mapMutations({

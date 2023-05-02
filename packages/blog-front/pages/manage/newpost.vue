@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import Cookie from 'js-cookie'
 import Editor from '@/components/editor/Editor.vue'
 import { client } from '@/api'
 export default {
@@ -33,7 +34,7 @@ export default {
   data() {
     return {
       postTitle: '',
-      postContent: '<p style="color:#ccc !important">내용을 입력하세요</p>',
+      postContent: '',
       imageFile: null,
       uploadedImgUrl: '',
     }
@@ -43,7 +44,13 @@ export default {
   },
   methods: {
     async onSubmit() {
-      const userId = this.$store.state.userId
+      let userId = this.$store.state.userId
+      if (!userId) {
+        userId = Cookie.get('userId')
+      } else {
+        this.$router.push('/')
+      }
+
       await this.$store.dispatch('getUserInfo', userId)
 
       const newPost = {
