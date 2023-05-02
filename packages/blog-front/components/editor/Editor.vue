@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isMounted">
+  <div v-if="isMounted" class="editor">
     <input v-if="editable" type="file" @change="addImage" />
     <editor-content :editor="editor" />
   </div>
@@ -10,6 +10,8 @@
 
 <script>
 import { Editor, EditorContent } from '@tiptap/vue-2'
+import BaseHeading from '@tiptap/extension-heading'
+import { mergeAttributes } from '@tiptap/core'
 import Placeholder from '@tiptap/extension-placeholder'
 import Image from '@tiptap/extension-image'
 import StarterKit from '@tiptap/starter-kit'
@@ -41,6 +43,7 @@ export default {
     editable(value) {
       this.editor?.setOptions?.({
         editable: value,
+        injectCSS,
       })
     },
     value(value) {
@@ -60,11 +63,35 @@ export default {
 
   mounted() {
     const _vm = this
+    const classes = {
+      1: 'text-4xl',
+      2: 'text-3xl',
+      3: 'text-2xl',
+      4: 'text-1xl',
+    }
+
+    const Heading = BaseHeading.configure({ levels: [1, 2, 3] }).extend({
+      renderHTML({ node, HTMLAttributes }) {
+        const hasLevel = this.options.levels.includes(node.attrs.level)
+        const level = hasLevel ? node.attrs.level : this.options.levels[0]
+
+        return [
+          `h${level}`,
+          mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+            class: `${classes[level] ?? ''}`,
+          }),
+          0,
+        ]
+      },
+    })
+
     this.editor = new Editor({
+      injectCSS: true,
       content: this.value,
       extensions: [
         StarterKit,
         Image,
+        Heading,
         Placeholder.configure({
           // Use a placeholder:
           placeholder: 'Write something …',
@@ -119,6 +146,19 @@ export default {
 }
 img {
   max-width: 100%;
+}
+.ProseMirror {
+  // background-color: blue;
+  ul,
+  ol {
+    padding-left: 40px;
+    margin: 16px 0;
+  }
+}
+
+ul {
+  margin: 16px 0;
+  padding-left: 40px;
 }
 
 /* Placeholder (on every new line) */

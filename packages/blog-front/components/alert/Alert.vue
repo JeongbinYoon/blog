@@ -1,10 +1,15 @@
 <template>
   <Transition name="slide-open" :duration="3000">
     <!-- Info -->
+
     <div v-if="isOpen && alertData.type === 'info'" class="alert info">
-      <p class="alert--content">
+      <p v-if="!isLoading" class="alert--content">
         {{ alertData.description }}
       </p>
+      <img
+        v-else
+        src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921"
+      />
     </div>
 
     <!-- Warning -->
@@ -44,6 +49,7 @@ export default {
         description: '',
       },
       isOpen: false,
+      isLoading: false,
     }
   },
   mounted() {
@@ -62,18 +68,26 @@ export default {
     // API -> application program interface
     //
 
-    this.$nuxt.$on('alert', ({ type, description, title, callback }) => {
-      this.isOpen = true
-      this.alertData.type = type
-      this.alertData.description = description
-      this.alertData.title = title
-      if (type === 'info' || type === 'warning') {
-        setTimeout(() => {
-          // callback && callback()
-          this.isOpen = false
-        }, 3000)
+    this.$nuxt.$on(
+      'alert',
+      async ({ type, description, title, callback, trigger }) => {
+        this.isOpen = true
+        this.alertData.type = type
+        this.alertData.description = description
+        this.alertData.title = title
+        if (trigger) {
+          this.isLoading = true
+          await trigger()
+          this.isLoading = false
+        }
+        if (type === 'info' || type === 'warning') {
+          callback && callback()
+          setTimeout(() => {
+            this.isOpen = false
+          }, 3000)
+        }
       }
-    })
+    )
   },
   methods: {
     confirm(answer) {
@@ -101,6 +115,7 @@ export default {
     color: #47ac51;
     background-color: #e3fde1;
     box-shadow: 0px 3px 4px rgba(108, 170, 92, 0.3);
+    transition: height 0.2s ease-in-out;
   }
   &.warning {
     color: #eb5757;

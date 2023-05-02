@@ -88,7 +88,7 @@ export default {
     }
   },
   methods: {
-    async onLogin() {
+    onLogin() {
       let type = ''
       if (this.userEmail !== '' && this.userPassword !== '') {
         type = 'info'
@@ -104,6 +104,8 @@ export default {
         this.$refs.userPasswordRef.focus()
         this.$refs.userPasswordRef.classList.add('warning')
       } else if (this.userEmail && this.userPassword) {
+      }
+      this.onAlert(type, description, async () => {
         await this.$store.dispatch('checkUserAccount', {
           userEmail: this.userEmail,
           userPassword: this.userPassword,
@@ -115,8 +117,7 @@ export default {
           type = 'warning'
           description = '아이디, 비밀번호를 다시 확인해주세요'
         }
-      }
-      this.onAlert(type, description)
+      })
     },
 
     async onJoin() {
@@ -165,12 +166,13 @@ export default {
       }
       this.onAlert(type, description)
     },
-    onAlert(type, description) {
+    onAlert(type, description, trigger) {
       $nuxt.$emit('alert', {
         type,
         description,
         title: '알림',
-        // callback: () => this.$router.push(`/`),
+        trigger,
+        callback: () => this.$router.push(`/`),
       })
     },
     changeForm() {
