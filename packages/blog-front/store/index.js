@@ -39,7 +39,7 @@ export const mutations = {
 
 export const actions = {
   async nuxtServerInit({ dispatch }, { req }) {
-    const cookies = req.headers.cookie
+    const cookies = req?.headers?.cookie
     if (cookies) {
       const cookieObj = req.headers.cookie?.split(';').reduce((acc, cur) => {
         const cookie = cur.split('=').map((item) => item.trim())
