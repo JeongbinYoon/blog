@@ -63,18 +63,13 @@ export default {
       }
 
       // document 업로드
-      client
-        .create(newPost)
-        .then((response) => {
-          console.log(response)
-          $nuxt.$emit('alert', {
-            type: 'info',
-            description: '글 생성 완료',
-            title: '알림',
-            // callback: () => this.$router.push(`/post/${response._id}`),
-          })
-        })
-        .catch((error) => console.error('Error creating document:', error))
+      const response = await client.create(newPost)
+      $nuxt.$emit('alert', {
+        type: 'info',
+        description: '글 생성 완료',
+        title: '알림',
+        // callback: () => this.$router.push(`/post/${response._id}`),
+      })
     },
     addImageUrl(url) {
       this.uploadedImgUrl = url
