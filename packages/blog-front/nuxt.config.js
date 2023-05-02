@@ -53,9 +53,9 @@ export default {
   sanity: {
     projectId: 'lyvfm7vk',
     apiVersion: '2023-04-25',
+    useCdn: false,
   },
   server: {
-    host: '0',
     port: '3000', // optional
   },
 }

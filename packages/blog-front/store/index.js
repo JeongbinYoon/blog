@@ -1,7 +1,6 @@
-import { createClient, groq } from '@nuxtjs/sanity'
+import { groq } from '@nuxtjs/sanity'
 
 import Cookie from 'js-cookie'
-import { client } from '~/api'
 export const state = () => ({
   currentPost: {
     body: [
@@ -58,7 +57,7 @@ export const actions = {
       }
     }
   },
-  async getCurrentPost({ commit, ...rest }, id) {
+  async getCurrentPost({ commit }, id) {
     const query = groq`*[_type == "post" && _id == "${id}"][0]`
     const data = await this.$sanity.fetch(query)
 
