@@ -2,7 +2,6 @@
   <div class="post">
     <PostParticipants />
     <PostContent />
-    <PostAnchor />
   </div>
 </template>
 
@@ -10,13 +9,11 @@
 import { mapMutations } from 'vuex'
 import PostParticipants from '@/components/post/PostParticipants.vue'
 import PostContent from '@/components/post/PostContent.vue'
-import PostAnchor from '@/components/post/PostAnchor.vue'
 
 export default {
   components: {
     PostParticipants,
     PostContent,
-    PostAnchor,
   },
   layout: 'default',
 

@@ -146,7 +146,7 @@ export default {
   watch: {
     userInfo: {
       handler(newUserInfo) {
-        console.log(newUserInfo)
+        // console.log(newUserInfo)
         if (newUserInfo) {
           if (newUserInfo._id === this.authorId) {
             this.editPostAllowed = true
@@ -181,7 +181,7 @@ export default {
           .patch(this.$store.state.currentPost._id)
           .set(updateData)
           .commit()
-        console.dir(patched)
+        // console.dir(patched)
 
         // document 업로드
         $nuxt.$emit('alert', {
@@ -199,7 +199,7 @@ export default {
         title: '삭제',
       })
       this.$nuxt.$on('alert-confirm', async (answer) => {
-        console.log(answer)
+        // console.log(answer)
         if (answer) {
           await client.delete({
             query: `*[_type == "post" && _id == "${this.postId}"]`,
