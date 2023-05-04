@@ -12,11 +12,6 @@
       class="new-post__editor editor-content"
       @addImage="addImageUrl"
     />
-    <!-- <div class="new-post__preview">
-      <span style="color: #999">Preview</span>
-      <pre><code>{{ postTitle }}</code></pre>
-      <pre><code>{{ postContent }}</code></pre>
-    </div> -->
 
     <button class="submit-btn" @click="onSubmit">완료</button>
   </div>
@@ -47,12 +42,12 @@ export default {
       let userId = this.$store.state.userId
       if (!userId) {
         userId = Cookie.get('userId')
-      } else {
-        this.$router.push('/')
       }
-
+      if (!this.postTitle) {
+        this.$refs.titleRef.focus()
+        return
+      }
       await this.$store.dispatch('getUserInfo', userId)
-      // eEHi4U6xNIJxa0XEaCAGKktP
       const newPost = {
         _type: 'post',
         author_name: this.$store.state.userInfo.userName,
@@ -127,26 +122,5 @@ export default {
     right: 0;
     cursor: pointer;
   }
-  // &__preview {
-  //   padding: 1rem 0 0;
-
-  //   h3 {
-  //     margin: 1rem 0 0.5rem;
-  //   }
-
-  //   pre {
-  //     border-radius: 5px;
-  //     color: #333;
-  //   }
-
-  //   code {
-  //     display: block;
-  //     white-space: pre-wrap;
-  //     font-size: 0.8rem;
-  //     padding: 0.75rem 1rem;
-  //     background-color: #e9ecef;
-  //     color: #495057;
-  //   }
-  // }
 }
 </style>

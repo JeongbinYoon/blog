@@ -221,9 +221,8 @@ export default {
 
 <style lang="scss" scoped>
 .post-content {
-  width: 70%;
-  flex-shrink: 1;
-  margin: 0 20px;
+  max-width: 700px;
+  margin: 0 auto;
   > div {
     background-color: #fff;
     transition: background-color 0.5s;
@@ -253,7 +252,6 @@ export default {
     }
   }
   &__title {
-    width: 100%;
     margin: 0;
     padding: 20px 20px 0px;
     background: transparent;
@@ -262,14 +260,14 @@ export default {
     font-weight: 700;
     border: none;
     outline: none;
-    white-space: wrap;
+    overflow-wrap: anywhere;
     box-sizing: border-box;
     &::placeholder {
       color: $color_bright_grey;
     }
   }
   &__description {
-    padding: 20px;
+    padding: 50px 20px;
     line-height: 1.4;
     box-sizing: border-box;
   }

@@ -423,36 +423,33 @@ ul {
   @media (min-width: 1440px) {
     & {
       position: fixed;
-      top: 150px;
-      left: 80%;
+      top: 20%;
+      left: 75%;
     }
   }
 
   .anchors {
     list-style: none;
-    padding: 5px 5px;
+    margin: 0;
+    padding: 5px 0;
     border-left: 1.5px solid $color_border_grey;
-    position: sticky;
-    top: 30%;
     box-sizing: border-box;
     ul {
       list-style: none;
+      padding: 0px;
+      margin: 0;
     }
     li {
       width: 100%;
-      margin: 5px 0;
-      margin-left: 15px;
+      padding: 5px 0 0 15px;
       color: $color_dark_grey;
       font-size: $font_size_small;
-      transition: transform 0.1s, color 0.1s;
       box-sizing: border-box;
-
       overflow: hidden;
       text-overflow: ellipsis;
       cursor: pointer;
       // &:hover {
       //   color: $color_dark_black;
-      //   transform: scale(1.005);
       //   cursor: pointer;
       // }
     }
