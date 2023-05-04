@@ -102,6 +102,7 @@
         placeholder="제목 없음"
       />
       <Editor
+        ref="editor"
         v-model="postContent"
         :value="$store.state.currentPost.body[0].children[0].text"
         class="post-content__description"
@@ -183,6 +184,7 @@ export default {
           .commit()
         // console.dir(patched)
 
+        this.$refs.editor?.createAnchor?.()
         // document 업로드
         $nuxt.$emit('alert', {
           type: 'info',

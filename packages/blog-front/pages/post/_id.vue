@@ -1,6 +1,5 @@
 <template>
   <div class="post">
-    <PostParticipants />
     <PostContent />
   </div>
 </template>
@@ -12,7 +11,6 @@ import PostContent from '@/components/post/PostContent.vue'
 
 export default {
   components: {
-    PostParticipants,
     PostContent,
   },
   layout: 'default',

@@ -1,26 +1,50 @@
 <template>
   <div v-if="isMounted">
-    <div class="editor">
-      <input v-if="editable" type="file" @change="addImage" />
-      <editor-content :editor="editor" />
-    </div>
     <div class="post-anchors">
       <ul class="anchors">
-        <li v-for="(item, index) in headers" :key="index">
-          {{ item.value }}
-          <ul v-if="item.children.length">
-            <li v-for="(i, idx) in item.children" :key="idx">
-              <!-- {{ i }} -->
-              {{ i.value }}
-              <ul v-if="i.children.length">
-                <li v-for="(j, jdx) in i.children" :key="jdx">
-                  {{ j.value }}
+        <li
+          v-for="h1 in headers"
+          :key="h1.className"
+          :class="h1.className"
+          @click.stop="onScroll"
+        >
+          {{ h1.value }}
+          <ul v-if="h1.children.length">
+            <li
+              v-for="h2 in h1.children"
+              :key="h2.className"
+              :class="h2.className"
+              @click.stop="onScroll"
+            >
+              {{ h2.value }}
+              <ul v-if="h2.children.length">
+                <li
+                  v-for="h3 in h2.children"
+                  :key="h3.className"
+                  :class="h3.className"
+                  @click.stop="onScroll"
+                >
+                  {{ h3.value }}
+                  <ul v-if="h3.children.length">
+                    <li
+                      v-for="h4 in h3.children"
+                      :key="h4.className"
+                      :class="h4.className"
+                      @click.stop="onScroll"
+                    >
+                      {{ h4.value }}
+                    </li>
+                  </ul>
                 </li>
               </ul>
             </li>
           </ul>
         </li>
       </ul>
+    </div>
+    <div class="editor">
+      <input v-if="editable" type="file" @change="addImage" />
+      <editor-content :editor="editor" />
     </div>
   </div>
 
@@ -32,12 +56,20 @@
 <script>
 import { mapActions } from 'vuex'
 import { Editor, EditorContent } from '@tiptap/vue-2'
+import CodeBlock from '@tiptap/extension-code-block-lowlight'
+import html from 'highlight.js/lib/languages/xml'
+import css from 'highlight.js/lib/languages/css'
+import js from 'highlight.js/lib/languages/javascript'
+import ts from 'highlight.js/lib/languages/typescript'
+
 import BaseHeading from '@tiptap/extension-heading'
 import { mergeAttributes } from '@tiptap/core'
 import Placeholder from '@tiptap/extension-placeholder'
 import Image from '@tiptap/extension-image'
 import StarterKit from '@tiptap/starter-kit'
 import { client } from '@/api'
+import { hasCodeTag } from '@/utils/randomStr'
+// console.log(lowlight, '<<lowlight')
 
 export default {
   components: {
@@ -69,6 +101,11 @@ export default {
         editable: value,
       })
     },
+    isMounted(val) {
+      if (val) {
+        this.createAnchor()
+      }
+    },
     value(value) {
       // HTML
       const isSame = this.editor.getHTML() === value
@@ -84,7 +121,7 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
     const _vm = this
     const classes = {
       1: 'text-4xl heading',
@@ -106,13 +143,63 @@ export default {
           0,
         ]
       },
+      addCommands() {
+        return {
+          onTab:
+            (attr) =>
+            ({ chain, state, dispatch }) => {
+              return chain().insertContent('   ')
+            },
+        }
+      },
+      addKeyboardShortcuts() {
+        return {
+          // ↓ your new keyboard shortcut
+          Tab: (props) => {
+            let selection = window.getSelection().focusNode
+            let isCode = false
+            while (selection) {
+              if (selection?.classList?.contains('ProseMirror')) {
+                break
+              }
+              if (hasCodeTag(selection)) {
+                isCode = true
+                break
+              }
+              selection = selection?.parentElement || selection.parentElement
+            }
+
+            if (isCode) {
+              return this.editor.commands.onTab()
+            } else {
+              this.editor.commands.sinkListItem('listItem')
+              this.editor.commands.focus('end')
+            }
+          },
+        }
+      },
     })
+    const { lowlight } = await import('lowlight')
+    lowlight.registerLanguage('html', html)
+    lowlight.registerLanguage('css', css)
+    lowlight.registerLanguage('js', js)
+    lowlight.registerLanguage('ts', ts)
+
     this.editor = new Editor({
       content: this.value,
       extensions: [
         StarterKit,
         Image,
         Heading,
+        CodeBlock.configure({
+          languageClassPrefix: 'language-',
+          exitOnTripleEnter: false,
+          exitOnArrowDown: false,
+          lowlight,
+          // HTMLAttributes: {
+          //   class: 'my-custom-class',
+          // },
+        }),
         Placeholder.configure({
           // Use a placeholder:
           placeholder: 'Write something …',
@@ -127,16 +214,43 @@ export default {
         }),
       ],
       onCreate(props) {
-        // 모든 h 태그
-        const headings = [...this.view.dom.querySelectorAll('h1,h2,h3,h4')]
+        _vm.isMounted = true
+      },
 
+      editable: this.editable,
+      onUpdate: ({ editor }) => {
+        // HTML
+        this.$emit('input', this.editor.getHTML())
+        if (this.editable && this.isMounted) {
+          this.createAnchor()
+        }
+
+        // JSON
+        // this.$emit('input', this.editor.getJSON())
+      },
+    })
+  },
+
+  beforeDestroy() {
+    this.editor.destroy()
+  },
+
+  methods: {
+    createAnchor() {
+      if (this.isMounted) {
+        // 모든 h 태그
+
+        const headings = [
+          ...this.editor.view.dom.querySelectorAll('h1,h2,h3,h4'),
+        ]
         // 첫 번째 요소 태그가 h1일 때까지 앞 요소 삭제
-        while (headings[0].tagName !== 'H1') {
+        while (headings.length && headings[0].tagName !== 'H1') {
           headings.shift()
         }
 
         const headingInfo = headings.map((el) => {
-          const className = el.tagName + '123123'
+          const randomStr = Math.random().toString(36).substring(2, 12)
+          const className = el.tagName + randomStr
           el.classList.add(className)
           return {
             tag: el.tagName,
@@ -178,26 +292,9 @@ export default {
         lastChilds.push({ ...headingInfo[headingInfo.length - 1] })
         const h1parents = headingInfo.filter((el) => el.tag === 'H1')
 
-        _vm.headers = h1parents
-        _vm.isMounted = true
-      },
-
-      editable: this.editable,
-      onUpdate: () => {
-        // HTML
-        this.$emit('input', this.editor.getHTML())
-
-        // JSON
-        // this.$emit('input', this.editor.getJSON())
-      },
-    })
-  },
-
-  beforeDestroy() {
-    this.editor.destroy()
-  },
-
-  methods: {
+        this.headers = h1parents
+      }
+    },
     async addImage(e) {
       const file = e.target.files[0]
       let url = ''
@@ -209,6 +306,13 @@ export default {
       if (url !== '') {
         this.editor.chain().focus().setImage({ src: url }).run()
         this.$emit('addImage', url)
+      }
+    },
+    onScroll(e) {
+      const targetClassName = e.target.className
+      const scrollTarget = document.querySelector(`.${targetClassName}:not(li)`)
+      if (scrollTarget) {
+        scrollTarget.scrollIntoView()
       }
     },
     ...mapActions({
@@ -246,25 +350,111 @@ ul {
   pointer-events: none;
   height: 0;
 }
+.ProseMirror {
+  pre {
+    background: #0d0d0d;
+    color: #fff;
+    font-family: 'JetBrainsMono', monospace;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+
+    code {
+      color: inherit;
+      padding: 0;
+      background: none;
+      font-size: 0.8rem;
+    }
+
+    .hljs-comment,
+    .hljs-quote {
+      color: #616161;
+    }
+
+    .hljs-variable,
+    .hljs-template-variable,
+    .hljs-attribute,
+    .hljs-tag,
+    .hljs-name,
+    .hljs-regexp,
+    .hljs-link,
+    .hljs-name,
+    .hljs-selector-id,
+    .hljs-selector-class {
+      color: #f98181;
+    }
+
+    .hljs-number,
+    .hljs-meta,
+    .hljs-built_in,
+    .hljs-builtin-name,
+    .hljs-literal,
+    .hljs-type,
+    .hljs-params {
+      color: #fbbc88;
+    }
+
+    .hljs-string,
+    .hljs-symbol,
+    .hljs-bullet {
+      color: #b9f18d;
+    }
+
+    .hljs-title,
+    .hljs-section {
+      color: #faf594;
+    }
+
+    .hljs-keyword,
+    .hljs-selector-tag {
+      color: #70cff8;
+    }
+
+    .hljs-emphasis {
+      font-style: italic;
+    }
+
+    .hljs-strong {
+      font-weight: 700;
+    }
+  }
+}
 .post-anchors {
-  width: 10%;
-  min-width: 200px;
+  width: 200px;
+  @media (min-width: 1440px) {
+    & {
+      position: fixed;
+      top: 150px;
+      left: 80%;
+    }
+  }
+
   .anchors {
     list-style: none;
-    padding: 5px 15px;
+    padding: 5px 5px;
     border-left: 1.5px solid $color_border_grey;
     position: sticky;
     top: 30%;
-    > li {
+    box-sizing: border-box;
+    ul {
+      list-style: none;
+    }
+    li {
+      width: 100%;
+      margin: 5px 0;
+      margin-left: 15px;
       color: $color_dark_grey;
       font-size: $font_size_small;
-      margin: 5px 0;
       transition: transform 0.1s, color 0.1s;
-      &:hover {
-        color: $color_dark_black;
-        transform: scale(1.005);
-        cursor: pointer;
-      }
+      box-sizing: border-box;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      // &:hover {
+      //   color: $color_dark_black;
+      //   transform: scale(1.005);
+      //   cursor: pointer;
+      // }
     }
   }
 }

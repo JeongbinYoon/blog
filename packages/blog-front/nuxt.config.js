@@ -11,9 +11,22 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'stylesheet',
+        href: '//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css',
+      },
+      {
+        rel: 'stylesheet',
+        href: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css',
+        integrity:
+          'sha512-rO+olRTkcf304DQBxSWxln8JXCzTHlKnIdnMUwYvQa9/Jd4cQaNkItIUj6Z4nvW1dqK0SKXLbn9h4KwZTNtAyw==',
+        crossorigin: 'anonymous',
+        referrerpolicy: 'no-referrer',
+      },
+    ],
   },
-
   router: {
     middleware: 'protect-login',
   },

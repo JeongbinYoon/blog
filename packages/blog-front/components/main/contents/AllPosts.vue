@@ -89,7 +89,7 @@ export default {
         overflow: hidden;
         margin: 0;
         color: $color_dark_grey;
-        * {
+        *:not(code) {
           display: inline;
           margin: 0;
           padding: 0;
