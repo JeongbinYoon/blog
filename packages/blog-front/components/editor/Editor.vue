@@ -196,21 +196,9 @@ export default {
           exitOnTripleEnter: false,
           exitOnArrowDown: false,
           lowlight,
-          // HTMLAttributes: {
-          //   class: 'my-custom-class',
-          // },
         }),
         Placeholder.configure({
-          // Use a placeholder:
           placeholder: 'Write something …',
-          // Use different placeholders depending on the node type:
-          // placeholder: ({ node }) => {
-          //   if (node.type.name === 'heading') {
-          //     return 'What’s the title?'
-          //   }
-
-          //   return 'Can you add some further context?'
-          // },
         }),
       ],
       onCreate(props) {
@@ -257,6 +245,7 @@ export default {
             children: [],
             value: el.innerText,
             className,
+            dom: el,
           }
         })
 
@@ -293,6 +282,30 @@ export default {
         const h1parents = headingInfo.filter((el) => el.tag === 'H1')
 
         this.headers = h1parents
+
+        // Observer
+        this.$nextTick(() => {
+          let previous = null
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              // console.log(entry)
+              const anchorTarget = document.querySelector(
+                `.anchors .${entry.target.className}`
+              )
+              if (entry.isIntersecting) {
+                if (anchorTarget) {
+                  if (previous) {
+                    previous.classList.remove('active')
+                  }
+                  previous = anchorTarget
+                  anchorTarget.classList.add('active')
+                }
+              }
+            })
+          })
+
+          headingInfo.map((target) => observer.observe(target.dom))
+        })
       }
     },
     async addImage(e) {
@@ -448,6 +461,10 @@ ul {
       overflow: hidden;
       text-overflow: ellipsis;
       cursor: pointer;
+      transition: color 0.2s;
+      &.active {
+        color: $color_dark_black;
+      }
       // &:hover {
       //   color: $color_dark_black;
       //   cursor: pointer;
