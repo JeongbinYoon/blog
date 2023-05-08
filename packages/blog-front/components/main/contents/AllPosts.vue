@@ -14,7 +14,7 @@
           <span class="post-date">{{ post._createdAt.slice(0, 10) }}</span>
         </div>
         <div class="post__description">
-          <p v-html="post.body[0].children[0].text"></p>
+          <p v-html="getPostValue(post)"></p>
         </div>
       </li>
     </ul>
@@ -34,6 +34,10 @@ export default {
       getAllPosts: 'getAllPosts',
       getRecentPosts: 'getRecentPosts',
     }),
+
+    getPostValue(post) {
+      return post?.body[0]?.children[0]?.text
+    },
     removePostsAll() {
       this.$nuxt.$emit('alert', {
         type: 'confirm',

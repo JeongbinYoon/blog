@@ -59,7 +59,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/',
+    baseURL: 'http://172.30.1.48:8851',
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
@@ -72,7 +72,7 @@ export default {
     useCdn: false,
   },
   server: {
-    host: '0.0.0.0',
+    // host: '0.0.0.0',
     port: '3000', // optional
   },
 }

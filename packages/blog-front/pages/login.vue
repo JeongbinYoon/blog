@@ -88,7 +88,7 @@ export default {
     }
   },
   methods: {
-    onLogin() {
+    async onLogin() {
       let type = ''
       if (this.userEmail !== '' && this.userPassword !== '') {
         type = 'info'
@@ -104,20 +104,22 @@ export default {
         this.$refs.userPasswordRef.focus()
         this.$refs.userPasswordRef.classList.add('warning')
       } else if (this.userEmail && this.userPassword) {
-      }
-      this.onAlert(type, description, async () => {
         await this.$store.dispatch('checkUserAccount', {
           userEmail: this.userEmail,
           userPassword: this.userPassword,
         })
+
         const userId = this.$store.state.userId
         if (userId) {
           description = '로그인 성공'
         } else {
           type = 'warning'
           description = '아이디, 비밀번호를 다시 확인해주세요'
+          this.$refs.userPasswordRef.focus()
+          this.$refs.userPasswordRef.classList.add('warning')
         }
-      })
+      }
+      this.onAlert(type, description)
     },
 
     async onJoin() {
@@ -155,7 +157,12 @@ export default {
         this.$refs.userPasswordRef.focus()
         this.$refs.userPasswordRef.classList.add('warning')
       } else if (this.userEmail && this.userPassword && this.passwordChecked) {
-        const isExistingEmail = await this.createUser()
+        const isExistingEmail = await this.$store.dispatch('createUser', {
+          email: this.userEmail,
+          name: this.userName,
+          password: this.userPassword,
+        })
+
         if (isExistingEmail) {
           type = 'warning'
           description = '이미 존재하는 아이디입니다'
@@ -172,40 +179,24 @@ export default {
         description,
         title: '알림',
         trigger,
-        callback: () => this.$router.push(`/`),
+        callback: () => {
+          if (type !== 'warning') this.$router.push(`/`)
+        },
       })
     },
     changeForm() {
       this.isJoin = !this.isJoin
       this.userEmail = ''
+      this.userName = ''
       this.userPassword = ''
       this.userPasswordCheck = ''
     },
     removeFocus(e) {
       e.target.classList.remove('warning')
     },
-    async createUser() {
-      // 아이디(이메일) 중복체크
-      await this.checkUserEmail()
-      const isExistingEmail = this.$store.state.isExistingEmail
-
-      if (isExistingEmail) {
-        return isExistingEmail
-      } else {
-        // 계정 생성
-        const newUser = {
-          _type: 'users',
-          userEmail: this.userEmail,
-          userName: this.userName,
-          userPassword: this.userPassword,
-        }
-        await client.create(newUser)
-        return isExistingEmail
-      }
-    },
-    async checkUserEmail() {
-      await this.$store.dispatch('checkUserEmail', this.userEmail)
-    },
+  },
+  async checkUserEmail() {
+    await this.$store.dispatch('checkUserEmail', this.userEmail)
   },
 }
 </script>

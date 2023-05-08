@@ -1,6 +1,6 @@
 import { groq } from '@nuxtjs/sanity'
-
 import Cookie from 'js-cookie'
+
 export const state = () => ({
   currentPost: {
     body: [
@@ -85,27 +85,60 @@ export const actions = {
     commit('setRecentPosts', data)
   },
 
-  async checkUserEmail({ commit }, userEmail) {
-    const query = groq`*[_type == "users" && userEmail == "${userEmail}"][0]`
-    const data = await this.$sanity.fetch(query)
-    const answer = !!data
-    commit('setCheckUserEmail', answer)
+  // async checkUserEmail({ commit }, userEmail) {
+  //   const query = groq`*[_type == "users" && userEmail == "${userEmail}"][0]`
+  //   const data = await this.$sanity.fetch(query)
+  //   const answer = !!data
+  //   commit('setCheckUserEmail', answer)
+  // },
+
+  // 계정 생성
+  async createUser(_, newUser) {
+    try {
+      const result = await this.$axios.post('/users/signup', newUser)
+      console.log(result)
+      if (result.data === false) {
+        console.error('User already exists.')
+        return false
+      } else return true
+    } catch (e) {
+      console.error(e)
+    }
   },
+  // async checkUserAccount({ dispatch }, { userEmail, userPassword }) {
+  //   const query = groq`*[_type == "users" && userEmail == "${userEmail}"][0]`
+  //   const data = await this.$sanity.fetch(query)
+  //   console.log(data, '<<<<<data')
+  //   let isLoginAllowed = false
+
+  //   // 요청한 Email에 대한 계정이 있는 경우 비밀번호 확인
+  //   if (data) {
+  //     userPassword === data.userPassword
+  //       ? (isLoginAllowed = true)
+  //       : (isLoginAllowed = false)
+  //   }
+
+  //   // email, password OK
+  //   if (isLoginAllowed) {
+  //     await dispatch('login', data._id)
+  //   }
+  // },
   async checkUserAccount({ dispatch }, { userEmail, userPassword }) {
-    const query = groq`*[_type == "users" && userEmail == "${userEmail}"][0]`
-    const data = await this.$sanity.fetch(query)
-    console.log(data, '<<<<<data')
+    const result = await this.$axios.get(
+      '/users/login',
+      userEmail,
+      userPassword
+    )
+    console.log(result, '<<<< User')
+
     let isLoginAllowed = false
 
     // 요청한 Email에 대한 계정이 있는 경우 비밀번호 확인
-    if (data) {
-      userPassword === data.userPassword
-        ? (isLoginAllowed = true)
-        : (isLoginAllowed = false)
-    }
-
-    // email, password OK
-    if (isLoginAllowed) {
+    if (result.data === false) {
+      console.log('User not found!')
+      return false
+    } else {
+      // email, password OK
       await dispatch('login', data._id)
     }
   },

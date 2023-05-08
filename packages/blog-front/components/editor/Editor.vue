@@ -2,37 +2,25 @@
   <div v-if="isMounted">
     <div class="post-anchors">
       <ul class="anchors">
-        <li
-          v-for="h1 in headers"
-          :key="h1.className"
-          :class="h1.className"
-          @click.stop="onScroll"
-        >
-          {{ h1.value }}
+        <li v-for="h1 in headers" :key="h1.className">
+          <span :class="h1.className" @click.stop="onScroll">
+            {{ h1.value }}
+          </span>
           <ul v-if="h1.children.length">
-            <li
-              v-for="h2 in h1.children"
-              :key="h2.className"
-              :class="h2.className"
-              @click.stop="onScroll"
-            >
-              {{ h2.value }}
+            <li v-for="h2 in h1.children" :key="h2.className">
+              <span :class="h2.className" @click.stop="onScroll">
+                {{ h2.value }}
+              </span>
               <ul v-if="h2.children.length">
-                <li
-                  v-for="h3 in h2.children"
-                  :key="h3.className"
-                  :class="h3.className"
-                  @click.stop="onScroll"
-                >
-                  {{ h3.value }}
+                <li v-for="h3 in h2.children" :key="h3.className">
+                  <span :class="h3.className" @click.stop="onScroll">
+                    {{ h3.value }}
+                  </span>
                   <ul v-if="h3.children.length">
-                    <li
-                      v-for="h4 in h3.children"
-                      :key="h4.className"
-                      :class="h4.className"
-                      @click.stop="onScroll"
-                    >
-                      {{ h4.value }}
+                    <li v-for="h4 in h3.children" :key="h4.className">
+                      <span :class="h4.className" @click.stop="onScroll">
+                        {{ h4.value }}
+                      </span>
                     </li>
                   </ul>
                 </li>
@@ -286,23 +274,28 @@ export default {
         // Observer
         this.$nextTick(() => {
           let previous = null
-          const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-              // console.log(entry)
-              const anchorTarget = document.querySelector(
-                `.anchors .${entry.target.className}`
-              )
-              if (entry.isIntersecting) {
-                if (anchorTarget) {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                // console.log(entry)
+                const anchorTarget = document.querySelector(
+                  `.anchors .${entry.target.className}`
+                )
+                if (!entry.isIntersecting && anchorTarget) {
                   if (previous) {
                     previous.classList.remove('active')
                   }
                   previous = anchorTarget
                   anchorTarget.classList.add('active')
+                } else {
+                  console.log(anchorTarget)
                 }
-              }
-            })
-          })
+              })
+            },
+            {
+              rootMargin: '-150px 0px -700px 0px',
+            }
+          )
 
           headingInfo.map((target) => observer.observe(target.dom))
         })
@@ -323,7 +316,9 @@ export default {
     },
     onScroll(e) {
       const targetClassName = e.target.className
-      const scrollTarget = document.querySelector(`.${targetClassName}:not(li)`)
+      const scrollTarget = document.querySelector(
+        `.${targetClassName}:not(span)`
+      )
       if (scrollTarget) {
         scrollTarget.scrollIntoView()
       }
@@ -461,9 +456,9 @@ ul {
       overflow: hidden;
       text-overflow: ellipsis;
       cursor: pointer;
-      transition: color 0.2s;
-      &.active {
+      .active {
         color: $color_dark_black;
+        font-weight: 700;
       }
       // &:hover {
       //   color: $color_dark_black;
