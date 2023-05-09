@@ -71,6 +71,9 @@
 
         {{ editable ? '저장' : '수정' }}
       </span>
+      <span v-if="editable" class="post-edit" @click="editable = false"
+        >취소</span
+      >
       <span v-if="isOwner" class="post-edit" @click="deletePost">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -139,9 +142,9 @@ export default {
     this.authorName = this.$store.state.currentPost.author_name
   },
   computed: {
-    ...mapState(['userInfo', 'userId']),
+    ...mapState(['userInfo']),
     isOwner() {
-      return this.userId === this.$store.state.currentPost.author_id
+      return this.userInfo?._id === this.$store.state.currentPost.author_id
     },
   },
   watch: {

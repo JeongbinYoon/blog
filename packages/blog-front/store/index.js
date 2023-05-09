@@ -12,8 +12,6 @@ export const state = () => ({
   allPosts: [],
   createdDocId: '',
   recentPosts: [],
-  isExistingEmail: false,
-  userId: null,
   userInfo: null,
   currentPostHeadings: [],
 })
@@ -27,12 +25,6 @@ export const mutations = {
   },
   setCurrentPost(state, post) {
     state.currentPost = post
-  },
-  setCheckUserEmail(state, answer) {
-    state.isExistingEmail = answer
-  },
-  setUserId(state, userId) {
-    state.userId = userId
   },
   setUserInfo(state, userInfo) {
     state.userInfo = userInfo
@@ -70,6 +62,7 @@ export const actions = {
     const data = await this.$sanity.fetch(query)
 
     commit('setCurrentPost', data)
+    console.dir(data)
     return data
   },
 
@@ -85,6 +78,7 @@ export const actions = {
     commit('setRecentPosts', data)
   },
 
+  // SANITY
   // async checkUserEmail({ commit }, userEmail) {
   //   const query = groq`*[_type == "users" && userEmail == "${userEmail}"][0]`
   //   const data = await this.$sanity.fetch(query)
@@ -105,60 +99,61 @@ export const actions = {
       console.error(e)
     }
   },
+
+  // SANITY
+  async checkUserAccount({ dispatch }, { userEmail, userPassword }) {
+    const query = groq`*[_type == "users" && userEmail == "${userEmail}"][0]`
+    const data = await this.$sanity.fetch(query)
+
+    // 요청한 Email에 대한 계정이 있는 경우 비밀번호 확인
+    if (data) {
+      // 유저 정보 조회
+      // email, password OK
+      if (userPassword === data.userPassword) {
+        await dispatch('login', data._id)
+      }
+    }
+  },
+
   // async checkUserAccount({ dispatch }, { userEmail, userPassword }) {
-  //   const query = groq`*[_type == "users" && userEmail == "${userEmail}"][0]`
-  //   const data = await this.$sanity.fetch(query)
-  //   console.log(data, '<<<<<data')
+  //   const result = await this.$axios.get(
+  //     '/users/login',
+  //     userEmail,
+  //     userPassword
+  //   )
+  //   console.log(result, '<<<< User')
+
   //   let isLoginAllowed = false
 
   //   // 요청한 Email에 대한 계정이 있는 경우 비밀번호 확인
-  //   if (data) {
-  //     userPassword === data.userPassword
-  //       ? (isLoginAllowed = true)
-  //       : (isLoginAllowed = false)
-  //   }
-
-  //   // email, password OK
-  //   if (isLoginAllowed) {
+  //   if (result.data === false) {
+  //     console.log('User not found!')
+  //     return false
+  //   } else {
+  //     // email, password OK
   //     await dispatch('login', data._id)
   //   }
   // },
-  async checkUserAccount({ dispatch }, { userEmail, userPassword }) {
-    const result = await this.$axios.get(
-      '/users/login',
-      userEmail,
-      userPassword
-    )
-    console.log(result, '<<<< User')
 
-    let isLoginAllowed = false
-
-    // 요청한 Email에 대한 계정이 있는 경우 비밀번호 확인
-    if (result.data === false) {
-      console.log('User not found!')
-      return false
-    } else {
-      // email, password OK
-      await dispatch('login', data._id)
-    }
+  // async login({ dispatch }, userId) {
+  // },
+  logout({ commit }) {
+    // commit('setUserId', null)
+    commit('setUserInfo', null)
+    Cookie.remove('userId')
   },
   async login({ dispatch }, userId) {
     await dispatch('getUserInfo', userId)
-  },
-  logout({ commit }) {
-    Cookie.remove('userId')
-    commit('setUserId', null)
-    commit('setUserInfo', null)
   },
   async getUserInfo({ commit }, userId) {
     const query = groq`*[_type == "users" && _id == "${userId}"][0]`
     try {
       const data = await this.$sanity.fetch(query)
-      // console.log(data)
+      // console.log('User', data)
       if (data) {
         commit('setUserInfo', data)
-        commit('setUserId', userId)
         Cookie.set('userId', userId)
+        // commit('setUserId', userId)
       } else {
         throw new Error('user not found.')
       }

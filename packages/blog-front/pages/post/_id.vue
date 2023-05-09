@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
 import PostContent from '@/components/post/PostContent.vue'
 
 export default {
@@ -20,14 +19,6 @@ export default {
     if (!result) {
       return redirect('/')
     }
-  },
-  mounted() {
-    this.$store.dispatch('getUserInfo', this.$store.state.userId)
-  },
-  methods: {
-    ...mapMutations({
-      setUserId: 'setUserId',
-    }),
   },
 }
 </script>

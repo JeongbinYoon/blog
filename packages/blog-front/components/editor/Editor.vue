@@ -196,11 +196,13 @@ export default {
       editable: this.editable,
       onUpdate: ({ editor }) => {
         // HTML
-        this.$emit('input', this.editor.getHTML())
+
         if (this.editable && this.isMounted) {
           this.createAnchor()
         }
-
+        // this.$nextTick(() => {
+        //   this.$emit('input', this.editor.getHTML())
+        // })
         // JSON
         // this.$emit('input', this.editor.getJSON())
       },
@@ -212,6 +214,9 @@ export default {
   },
 
   methods: {
+    getHTML() {
+      return this.editor.getHTML()
+    },
     createAnchor() {
       if (this.isMounted) {
         // 모든 h 태그

@@ -1,0 +1,101 @@
+//  js
+{
+  // 1. 회원가입
+  this.$axios.post('/users/signup', {
+    email: 'abc@aaa.com',
+    name: 'jeongbin',
+    password: '1234',
+  })
+
+  // 이미 가입된 계정 유무
+  const response = { data: false }
+}
+
+{
+  // 2. 로그인
+  this.$axios.get('/users/login', { email: 'abc@aaa.com', passowrd: '1234' })
+
+  // unique ID
+  const response = { id: '3qD2AEld3k6AuWALSPpHWo' }
+}
+
+{
+  // 3. 유저 정보
+  const userId = '3qD2AEld3k6AuWALSPpHWo'
+  this.$axios.get('/users', { userId })
+
+  const response = {
+    name: 'jeongbin',
+    email: 'abc@aaa.com',
+    id: '3qD2AEld3k6AuWALSPpHWo',
+  }
+}
+
+{
+  // 4. 메인 - Recent Posts 조회 (최신 글 3개)
+  this.$axios.get('/recentPosts')
+  // 5. 메인 - all Posts 조회 (최신 글부터)
+  this.$axios.get('/allPosts')
+
+  const response = [
+    {
+      createdAt: 1683605950917,
+      updatedAt: 1683605950917,
+      id: 'a6adbb4a-eba6-4fb6-b686-0f2d432fc5ad',
+      title: '글 제목입니다.',
+      contents: '<h1>제목</h1><p>본문</p><p>본문</p>',
+      author: {
+        name: 'jeongbin',
+        email: 'abc@aaa.com',
+        id: '3qD2AEld3k6AuWALSPpHWo',
+      },
+    },
+    {
+      createdAt: 1683605950917,
+      updatedAt: 1683605950917,
+      id: 'a6adbb4a-eba6-4fb6-b686-0f2d432fc5ad',
+      title: '글 제목입니다.',
+      contents: '<h1>제목</h1><p>본문</p><p>본문</p>',
+      author: {
+        name: 'jeongbin',
+        email: 'abc@aaa.com',
+        id: '3qD2AEld3k6AuWALSPpHWo',
+      },
+    },
+  ]
+}
+
+{
+  // 6. 글 조회
+  const currentPostId = 'a6adbb4a-eba6-4fb6-b686-0f2d432fc5ad'
+  this.$axios.get('/post', { currentPostId })
+
+  const response = {
+    createdAt: 1683605950917,
+    updatedAt: 1683605950917,
+    id: 'a6adbb4a-eba6-4fb6-b686-0f2d432fc5ad',
+    title: '글 제목입니다.',
+    contents: '<h1>제목</h1><p>본문</p><p>본문</p>',
+    likes: 44,
+    author: {
+      name: 'jeongbin',
+      email: 'abc@aaa.com',
+      id: '3qD2AEld3k6AuWALSPpHWo',
+    },
+  }
+}
+
+{
+  // 6. 글 삭제
+  const currentPostId = 'a6adbb4a-eba6-4fb6-b686-0f2d432fc5ad'
+  this.$axios.delete('/post', { currentPostId })
+}
+
+{
+  // 7. 글 수정
+  const updateData = {
+    title: '수정 제목',
+    contents: '수정 본문',
+  }
+  this.$axios.put('/post', { updateData })
+}

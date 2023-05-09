@@ -8,6 +8,7 @@
       placeholder="제목 없음"
     />
     <Editor
+      ref="editor"
       v-model="postContent"
       class="new-post__editor editor-content"
       @addImage="addImageUrl"
@@ -39,7 +40,9 @@ export default {
   },
   methods: {
     async onSubmit() {
-      let userId = this.$store.state.userId
+      const userInfo = this.$store.state.userInfo
+
+      let userId = userInfo?._id
       if (!userId) {
         userId = Cookie.get('userId')
       }
@@ -50,8 +53,8 @@ export default {
       await this.$store.dispatch('getUserInfo', userId)
       const newPost = {
         _type: 'post',
-        author_name: this.$store.state.userInfo.userName,
-        author_id: this.$store.state.userInfo._id,
+        author_name: userInfo?.userName,
+        author_id: userInfo?._id,
         title: this.postTitle,
         likes: 0,
         mainImage: this.uploadedImgUrl,
@@ -59,12 +62,14 @@ export default {
           {
             _type: 'block',
             style: 'normal',
-            children: [{ _type: 'document', text: this.postContent }],
+            children: [
+              { _type: 'document', text: this.$refs.editor.getHTML() },
+            ],
           },
         ],
       }
 
-      // document 업로드
+      // // document 업로드
       const response = await client.create(newPost)
       $nuxt.$emit('alert', {
         type: 'info',

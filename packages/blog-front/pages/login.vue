@@ -90,33 +90,33 @@ export default {
   methods: {
     async onLogin() {
       let type = ''
+      let description = ''
+
       if (this.userEmail !== '' && this.userPassword !== '') {
         type = 'info'
       } else type = 'warning'
 
-      let description = ''
       if (this.userEmail === '') {
         description = '아이디를 입력해주세요'
-        this.$refs.emailRef.focus()
-        this.$refs.emailRef.classList.add('warning')
+        this.onFocus('emailRef')
       } else if (this.userPassword === '') {
         description = '비밀번호를 입력해주세요'
-        this.$refs.userPasswordRef.focus()
-        this.$refs.userPasswordRef.classList.add('warning')
+        this.onFocus('userPasswordRef')
       } else if (this.userEmail && this.userPassword) {
+        // 로그인 가능 여부 확인 (계정, 패스워드 체크)
         await this.$store.dispatch('checkUserAccount', {
           userEmail: this.userEmail,
           userPassword: this.userPassword,
         })
 
-        const userId = this.$store.state.userId
+        const userId = this.$store.state.userInfo?._id
+
         if (userId) {
           description = '로그인 성공'
         } else {
           type = 'warning'
           description = '아이디, 비밀번호를 다시 확인해주세요'
-          this.$refs.userPasswordRef.focus()
-          this.$refs.userPasswordRef.classList.add('warning')
+          this.onFocus('userPasswordRef')
         }
       }
       this.onAlert(type, description)
@@ -137,25 +137,20 @@ export default {
       let description = ''
       if (this.userEmail === '') {
         description = '아이디를 입력해주세요'
-        this.$refs.emailRef.focus()
-        this.$refs.emailRef.classList.add('warning')
+        this.onFocus('emailRef')
       } else if (this.userName === '') {
         description = '이름을 입력해주세요'
-        this.$refs.userNameRef.focus()
-        this.$refs.userNameRef.classList.add('warning')
+        this.onFocus('userNameRef')
       } else if (this.userPassword === '' || this.userPasswordCheck === '') {
         description = '비밀번호를 입력해주세요'
         if (this.userPassword === '') {
-          this.$refs.userPasswordRef.focus()
-          this.$refs.userPasswordRef.classList.add('warning')
+          this.onFocus('userPasswordRef')
         } else {
-          this.$refs.userPasswordCheckRef.focus()
-          this.$refs.userPasswordCheckRef.classList.add('warning')
+          this.onFocus('userPasswordCheckRef')
         }
       } else if (!this.passwordChecked) {
         description = '비밀번호가 다릅니다'
-        this.$refs.userPasswordRef.focus()
-        this.$refs.userPasswordRef.classList.add('warning')
+        this.onFocus('userPasswordRef')
       } else if (this.userEmail && this.userPassword && this.passwordChecked) {
         const isExistingEmail = await this.$store.dispatch('createUser', {
           email: this.userEmail,
@@ -191,13 +186,17 @@ export default {
       this.userPassword = ''
       this.userPasswordCheck = ''
     },
+    onFocus(target) {
+      this.$refs[target].focus()
+      this.$refs[target].classList.add('warning')
+    },
     removeFocus(e) {
       e.target.classList.remove('warning')
     },
   },
-  async checkUserEmail() {
-    await this.$store.dispatch('checkUserEmail', this.userEmail)
-  },
+  // async checkUserEmail() {
+  //   await this.$store.dispatch('checkUserEmail', this.userEmail)
+  // },
 }
 </script>
 
