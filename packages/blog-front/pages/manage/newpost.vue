@@ -75,7 +75,7 @@ export default {
         type: 'info',
         description: '글 생성 완료',
         title: '알림',
-        // callback: () => this.$router.push(`/post/${response._id}`),
+        callback: () => this.$router.push(`/post/${response._id}`),
       })
     },
     addImageUrl(url) {

@@ -31,8 +31,43 @@
       </ul>
     </div>
     <div class="editor">
-      <input v-if="editable" type="file" @change="addImage" />
       <editor-content :editor="editor" />
+      <div ref="commandRef" class="command">
+        <ul class="command__list">
+          <li class="command__list--item">
+            <input
+              id="imageInput"
+              ref="imageInputRef"
+              type="file"
+              @change="addImage"
+            />
+            <label ref="inputLabel" for="imageInput">
+              <div class="iconBox">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6 icon"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                  />
+                </svg>
+              </div>
+              <div class="description">
+                <span class="description-title">이미지</span>
+                <span class="description-content"
+                  >파일 또는 링크를 이용해 업로드하세요</span
+                >
+              </div>
+            </label>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -51,10 +86,11 @@ import js from 'highlight.js/lib/languages/javascript'
 import ts from 'highlight.js/lib/languages/typescript'
 
 import BaseHeading from '@tiptap/extension-heading'
-import { mergeAttributes } from '@tiptap/core'
+import { mergeAttributes, Extension } from '@tiptap/core'
 import Placeholder from '@tiptap/extension-placeholder'
 import Image from '@tiptap/extension-image'
 import StarterKit from '@tiptap/starter-kit'
+
 import { client } from '@/api'
 import { hasCodeTag } from '@/utils/randomStr'
 // console.log(lowlight, '<<lowlight')
@@ -80,6 +116,7 @@ export default {
       isMounted: false,
       titles: [],
       headers: [],
+      command: false,
     }
   },
 
@@ -136,6 +173,7 @@ export default {
           onTab:
             (attr) =>
             ({ chain, state, dispatch }) => {
+              console.log('sss')
               return chain().insertContent('   ')
             },
         }
@@ -167,6 +205,21 @@ export default {
         }
       },
     })
+
+    const CustomExtension = Extension.create({
+      addKeyboardShortcuts() {
+        return {
+          '/': () => {
+            // _vm.$refs.imageInputRef.showPicker()
+            // _vm.$refs.command.
+            _vm.command = true
+            console.log(_vm.command)
+            // _vm.$refs.commandRef.classList.add('active')
+          },
+        }
+      },
+    })
+
     const { lowlight } = await import('lowlight')
     lowlight.registerLanguage('html', html)
     lowlight.registerLanguage('css', css)
@@ -179,6 +232,7 @@ export default {
         StarterKit,
         Image,
         Heading,
+        CustomExtension,
         CodeBlock.configure({
           languageClassPrefix: 'language-',
           exitOnTripleEnter: false,
@@ -196,6 +250,15 @@ export default {
       editable: this.editable,
       onUpdate: ({ editor }) => {
         // HTML
+        const commandRef = _vm.$refs.commandRef
+        if (_vm.command) {
+          commandRef.classList.add('active')
+        } else if (commandRef.classList.contains('active')) {
+          commandRef.classList.remove('active')
+        }
+        _vm.command = false
+        let currentTextNode = window.getSelection()
+        console.log(currentTextNode)
 
         if (this.editable && this.isMounted) {
           this.createAnchor()
@@ -331,6 +394,10 @@ export default {
     ...mapActions({
       setPostHeadings: 'setPostHeadings',
     }),
+
+    aa() {
+      console.log('hi')
+    },
   },
 }
 </script>
@@ -469,6 +536,67 @@ ul {
       //   color: $color_dark_black;
       //   cursor: pointer;
       // }
+    }
+  }
+}
+
+// Command
+.command {
+  position: fixed;
+  width: 300px;
+  background-color: $color_header_white;
+  border: 1px solid $color_border_grey;
+  border-radius: 5px;
+  box-shadow: 0px 5px 10px $color_shadow_grey;
+  opacity: 0%;
+  z-index: -1;
+  transition: opacity 0.2s;
+  &.active {
+    opacity: 100%;
+    z-index: 10;
+  }
+  &__list {
+    padding: 10px;
+    &--item {
+      display: flex;
+      align-items: center;
+      &:hover {
+        cursor: pointer;
+      }
+      #imageInput {
+        display: none;
+      }
+      label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+      .iconBox {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 46px;
+        height: 46px;
+        margin-right: 7px;
+        border: 1px solid $color_border_grey;
+        border-radius: 3px;
+        overflow: hidden;
+        .icon {
+          width: 40%;
+        }
+      }
+      .description {
+        display: flex;
+        flex-direction: column;
+        &-title {
+          margin-bottom: 3px;
+          font-size: 14px;
+        }
+        &-content {
+          font-size: 12px;
+          color: $color_dark_grey;
+        }
+      }
     }
   }
 }

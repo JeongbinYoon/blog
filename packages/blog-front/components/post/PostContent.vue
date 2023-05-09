@@ -270,7 +270,7 @@ export default {
     }
   }
   &__description {
-    padding: 50px 20px;
+    padding: 50px 20px 100px 20px;
     line-height: 1.4;
     box-sizing: border-box;
   }
