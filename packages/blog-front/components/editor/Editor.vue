@@ -39,7 +39,70 @@
       >
         <div :class="{ active: showCommand }" class="command">
           <ul class="command__list">
-            <li class="command__list--item" @click="openSecondDepth">
+            <li
+              class="command__list--item"
+              tabindex="0"
+              @click="openSecondDepth"
+              @keydown.enter.space="openSecondDepth"
+            >
+              <div class="iconBox">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6 icon"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                  />
+                </svg>
+              </div>
+              <div class="description">
+                <span class="description-title">이미지</span>
+                <span class="description-content"
+                  >파일 또는 링크를 이용해 업로드하세요</span
+                >
+              </div>
+            </li>
+            <li
+              class="command__list--item"
+              tabindex="0"
+              @click="openSecondDepth"
+              @keydown.enter.space="openSecondDepth"
+            >
+              <div class="iconBox">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6 icon"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                  />
+                </svg>
+              </div>
+              <div class="description">
+                <span class="description-title">이미지</span>
+                <span class="description-content"
+                  >파일 또는 링크를 이용해 업로드하세요</span
+                >
+              </div>
+            </li>
+            <li
+              class="command__list--item"
+              tabindex="0"
+              @click="openSecondDepth"
+              @keydown.enter.space="openSecondDepth"
+            >
               <div class="iconBox">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -73,14 +136,18 @@
             <ul class="header-list">
               <li
                 :class="{ active: imageInputMethod === 'file' }"
-                @click="imageInputMethod = 'file'"
+                tabindex="0"
+                @click="changeUploadImageType('file')"
+                @keydown.enter.space="changeUploadImageType('file')"
               >
                 <span>이미지</span>
                 <div class="border"></div>
               </li>
               <li
                 :class="{ active: imageInputMethod === 'link' }"
-                @click="imageInputMethod = 'link'"
+                tabindex="0"
+                @click="changeUploadImageType('link')"
+                @keydown.enter.space="changeUploadImageType('link')"
               >
                 <span>링크</span>
                 <div class="border"></div>
@@ -109,7 +176,12 @@
                 type="text"
                 placeholder="링크를 삽입하세요"
               />
-              <button @click="embedImageLink">이미지 추가</button>
+              <button
+                @click="embedImageLink"
+                @keydown.enter.space="embedImageLink"
+              >
+                이미지 추가
+              </button>
             </div>
           </div>
         </div>
@@ -222,9 +294,8 @@ export default {
       addCommands() {
         return {
           onTab:
-            (attr) =>
-            ({ chain, state, dispatch }) => {
-              console.log('sss')
+            () =>
+            ({ chain }) => {
               return chain().insertContent('   ')
             },
         }
@@ -234,19 +305,31 @@ export default {
           // ↓ your new keyboard shortcut
           Tab: (props) => {
             let selection = window.getSelection().focusNode
-            let isCode = false
-            while (selection) {
-              if (selection?.classList?.contains('ProseMirror')) {
-                break
+            let enterCommand = false
+            let canTab = false
+            const lastChar =
+              selection?.data && selection?.data[selection?.data?.length - 1]
+            if (selection?.innerText === '/' || lastChar === '/') {
+              canTab = true
+              enterCommand = true
+            } else {
+              while (selection) {
+                if (selection?.classList?.contains('ProseMirror')) {
+                  break
+                }
+                if (hasCodeTag(selection)) {
+                  canTab = true
+                  break
+                }
+                selection = selection?.parentElement || selection.parentElement
               }
-              if (hasCodeTag(selection)) {
-                isCode = true
-                break
-              }
-              selection = selection?.parentElement || selection.parentElement
             }
 
-            if (isCode) {
+            if (enterCommand) {
+              return
+            }
+
+            if (canTab && enterCommand === false) {
               return this.editor.commands.onTab()
             } else {
               this.editor.commands.sinkListItem('listItem')
@@ -469,6 +552,9 @@ export default {
       this.showCommandSecondDepth = false
       this.imageInputMethod = 'file'
     },
+    changeUploadImageType(type) {
+      this.imageInputMethod = type
+    },
   },
 }
 </script>
@@ -648,11 +734,19 @@ ul {
       z-index: 10;
     }
     &__list {
-      padding: 10px;
+      padding: 5px;
       &--item {
         display: flex;
         align-items: center;
-
+        padding: 5px;
+        border-radius: 5px;
+        &:focus {
+          outline: none;
+          background: #f0f1f5;
+        }
+        &:last-child {
+          // margin-bottom: 0;
+        }
         #imageInput {
           display: none;
         }
@@ -671,6 +765,7 @@ ul {
           width: 46px;
           height: 46px;
           margin-right: 7px;
+          background: #fff;
           border: 1px solid $color_border_grey;
           border-radius: 3px;
           overflow: hidden;
@@ -729,6 +824,12 @@ ul {
             > span {
               background: #f0f0f0;
               cursor: pointer;
+            }
+          }
+          &:focus {
+            outline: none;
+            > span {
+              background: #f0f0f0;
             }
           }
           &.active {
