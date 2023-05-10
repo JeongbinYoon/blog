@@ -32,16 +32,14 @@
     </div>
     <div class="editor">
       <editor-content :editor="editor" />
-      <div ref="commandRef" class="command">
-        <ul class="command__list">
-          <li class="command__list--item">
-            <input
-              id="imageInput"
-              ref="imageInputRef"
-              type="file"
-              @change="addImage"
-            />
-            <label ref="inputLabel" for="imageInput">
+      <div
+        class="command-container"
+        :class="{ active: showCommandContainer }"
+        @click="removeCommandActive($event)"
+      >
+        <div :class="{ active: showCommand }" class="command">
+          <ul class="command__list">
+            <li class="command__list--item" @click="openSecondDepth">
               <div class="iconBox">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -64,9 +62,57 @@
                   >파일 또는 링크를 이용해 업로드하세요</span
                 >
               </div>
-            </label>
-          </li>
-        </ul>
+            </li>
+          </ul>
+        </div>
+        <div
+          :class="{ active: showCommandSecondDepth }"
+          class="image second-command-depth"
+        >
+          <div class="image-header">
+            <ul class="header-list">
+              <li
+                :class="{ active: imageInputMethod === 'file' }"
+                @click="imageInputMethod = 'file'"
+              >
+                <span>이미지</span>
+                <div class="border"></div>
+              </li>
+              <li
+                :class="{ active: imageInputMethod === 'link' }"
+                @click="imageInputMethod = 'link'"
+              >
+                <span>링크</span>
+                <div class="border"></div>
+              </li>
+            </ul>
+          </div>
+          <div class="image-body">
+            <div v-if="imageInputMethod === 'file'" class="upload_file">
+              <input
+                ref="imageInputRef"
+                type="file"
+                accept="image/*"
+                @change="addImage"
+              />
+
+              <button
+                class="imageInputButton"
+                @click="$refs.imageInputRef.showPicker()"
+              >
+                이미지 업로드
+              </button>
+            </div>
+            <div v-else-if="imageInputMethod === 'link'" class="embed-link">
+              <input
+                v-model="imageLink"
+                type="text"
+                placeholder="링크를 삽입하세요"
+              />
+              <button @click="embedImageLink">이미지 추가</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -116,7 +162,12 @@ export default {
       isMounted: false,
       titles: [],
       headers: [],
-      command: false,
+      imageInputMethod: 'file',
+      imageLink: '',
+      showCommandContainer: false,
+      showCommand: false,
+      showCommandSecondDepth: false,
+      // left: 0,
     }
   },
 
@@ -210,11 +261,9 @@ export default {
       addKeyboardShortcuts() {
         return {
           '/': () => {
-            // _vm.$refs.imageInputRef.showPicker()
-            // _vm.$refs.command.
-            _vm.command = true
-            console.log(_vm.command)
-            // _vm.$refs.commandRef.classList.add('active')
+            _vm.showCommandContainer = true
+            _vm.showCommand = true
+            // _vm.editor.commands.insertContent('<p class="command_spot"> </p>')
           },
         }
       },
@@ -250,15 +299,12 @@ export default {
       editable: this.editable,
       onUpdate: ({ editor }) => {
         // HTML
-        const commandRef = _vm.$refs.commandRef
-        if (_vm.command) {
-          commandRef.classList.add('active')
-        } else if (commandRef.classList.contains('active')) {
-          commandRef.classList.remove('active')
-        }
-        _vm.command = false
-        let currentTextNode = window.getSelection()
-        console.log(currentTextNode)
+        // const rect =
+        //   currentTextNode.anchorNode?.getBoundingClientRect?.() ??
+        //   currentTextNode.anchorNode.parentElement.getBoundingClientRect()
+
+        // this.left = rect.width + rect.left
+        // console.log(rect)
 
         if (this.editable && this.isMounted) {
           this.createAnchor()
@@ -266,8 +312,6 @@ export default {
         // this.$nextTick(() => {
         //   this.$emit('input', this.editor.getHTML())
         // })
-        // JSON
-        // this.$emit('input', this.editor.getJSON())
       },
     })
   },
@@ -372,13 +416,15 @@ export default {
     async addImage(e) {
       const file = e.target.files[0]
       let url = ''
-      if (file !== null) {
+      if (file !== null && file.type.includes('image')) {
         const fileData = await client.assets.upload('image', file)
         url = fileData.url
-        console.log(url)
+      } else {
+        alert('지원하지 않는 확장자')
       }
       if (url !== '') {
         this.editor.chain().focus().setImage({ src: url }).run()
+        this.closeAllCommands()
         this.$emit('addImage', url)
       }
     },
@@ -395,8 +441,33 @@ export default {
       setPostHeadings: 'setPostHeadings',
     }),
 
-    aa() {
-      console.log('hi')
+    openSecondDepth() {
+      this.showCommand = false
+      this.showCommandSecondDepth = true
+    },
+
+    removeCommandActive(e) {
+      if (
+        e.target.classList.contains('command-container') &&
+        e.target.classList.contains('active')
+      ) {
+        this.closeAllCommands()
+      }
+    },
+
+    embedImageLink() {
+      if (this.imageLink) {
+        this.editor.commands.setImage({ src: this.imageLink })
+        this.imageLink = ''
+        this.closeAllCommands()
+      }
+    },
+
+    closeAllCommands() {
+      this.showCommandContainer = false
+      this.showCommand = false
+      this.showCommandSecondDepth = false
+      this.imageInputMethod = 'file'
     },
   },
 }
@@ -431,6 +502,10 @@ ul {
   height: 0;
 }
 .ProseMirror {
+  p {
+    // width: fit-content;
+    // max-width: 100%;
+  }
   pre {
     background: #0d0d0d;
     color: #fff;
@@ -541,60 +616,189 @@ ul {
 }
 
 // Command
-.command {
+.command-container {
+  width: 100vw;
+  height: 100vh;
   position: fixed;
-  width: 300px;
-  background-color: $color_header_white;
-  border: 1px solid $color_border_grey;
-  border-radius: 5px;
-  box-shadow: 0px 5px 10px $color_shadow_grey;
+  top: 0;
+  left: 0;
+
   opacity: 0%;
   z-index: -1;
-  transition: opacity 0.2s;
   &.active {
     opacity: 100%;
     z-index: 10;
   }
-  &__list {
-    padding: 10px;
-    &--item {
-      display: flex;
-      align-items: center;
-      &:hover {
-        cursor: pointer;
-      }
-      #imageInput {
-        display: none;
-      }
-      label {
+  .command {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    background-color: #fff;
+    border: 1px solid $color_border_grey;
+    border-radius: 5px;
+    box-shadow: 0px 5px 10px $color_shadow_grey;
+    font-size: 14px;
+    opacity: 0%;
+    z-index: -1;
+    transition: opacity 0.2s;
+    &.active {
+      opacity: 100%;
+      z-index: 10;
+    }
+    &__list {
+      padding: 10px;
+      &--item {
         display: flex;
         align-items: center;
-        cursor: pointer;
-      }
-      .iconBox {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 46px;
-        height: 46px;
-        margin-right: 7px;
-        border: 1px solid $color_border_grey;
-        border-radius: 3px;
-        overflow: hidden;
-        .icon {
-          width: 40%;
+
+        #imageInput {
+          display: none;
+        }
+        &:hover {
+          cursor: pointer;
+        }
+        > label {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+        }
+        .iconBox {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 46px;
+          height: 46px;
+          margin-right: 7px;
+          border: 1px solid $color_border_grey;
+          border-radius: 3px;
+          overflow: hidden;
+          .icon {
+            width: 40%;
+          }
+        }
+        .description {
+          display: flex;
+          flex-direction: column;
+          &-title {
+            margin-bottom: 3px;
+          }
+          &-content {
+            font-size: 12px;
+            color: $color_dark_grey;
+          }
         }
       }
-      .description {
+    }
+  }
+  .image.second-command-depth {
+    position: absolute;
+    top: 400px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    background-color: #fff;
+    border: 1px solid $color_border_grey;
+    border-radius: 5px;
+    box-shadow: 0px 5px 10px $color_shadow_grey;
+    opacity: 0%;
+    z-index: -1;
+    transition: opacity 0.2s;
+    &.active {
+      opacity: 100%;
+      z-index: 10;
+    }
+    .image-header {
+      padding: 10px 10px 0 10px;
+
+      border-bottom: 1px solid $color_border_grey;
+      .header-list {
+        list-style: none;
+        display: flex;
+        > li {
+          .border {
+            width: 60%;
+            margin: 0 auto;
+            border-bottom: 2px solid #333;
+            opacity: 0;
+            transition: opacity 0.15s;
+          }
+          font-size: $font_size_small;
+          &:hover {
+            > span {
+              background: #f0f0f0;
+              cursor: pointer;
+            }
+          }
+          &.active {
+            .border {
+              opacity: 100%;
+            }
+          }
+          > span {
+            display: inline-block;
+            padding: 3px 10px;
+            margin-bottom: 4px;
+            border-radius: 5px;
+            transition: background 0.1s;
+          }
+        }
+      }
+    }
+    .image-body {
+      padding: 10px;
+      .upload_file {
+        > input {
+          display: none;
+        }
+
+        .imageInputButton {
+          width: 100%;
+          padding: 10px 0;
+          text-align: center;
+          color: $color_dark_grey;
+          font-size: $font_size_tiny;
+          background: #fff;
+          border: 1px solid $color_border_grey;
+          border-radius: 3px;
+          cursor: pointer;
+          &:focus {
+            outline: 1px solid #578cff;
+          }
+        }
+      }
+      .embed-link {
         display: flex;
         flex-direction: column;
-        &-title {
-          margin-bottom: 3px;
-          font-size: 14px;
-        }
-        &-content {
-          font-size: 12px;
+        > input {
+          width: 100%;
+          height: 30px;
+          margin-bottom: 10px;
+          padding: 0 10px;
           color: $color_dark_grey;
+          font-size: $font_size_tiny;
+          border: 1px solid $color_bright_grey;
+          border-radius: 3px;
+          box-sizing: border-box;
+          &:focus {
+            outline: 1px solid #578cff;
+          }
+        }
+        > button {
+          width: 60%;
+          margin: 0 auto;
+          padding: 7px 0;
+          background: #578cff;
+          color: #fff;
+          border: none;
+          border-radius: 3px;
+          &:focus {
+            outline: 1px solid #578cff;
+          }
+          &:hover {
+            cursor: pointer;
+          }
         }
       }
     }
