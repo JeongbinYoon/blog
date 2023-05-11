@@ -37,8 +37,10 @@
         :class="{ active: showCommandContainer }"
         @click="removeCommandActive($event)"
       >
+        <!-- Command -->
         <div :class="{ active: showCommand }" class="command">
           <ul class="command__list">
+            <!-- Image -->
             <li
               class="command__list--item"
               tabindex="0"
@@ -64,15 +66,17 @@
               <div class="description">
                 <span class="description-title">이미지</span>
                 <span class="description-content"
-                  >파일 또는 링크를 이용해 업로드하세요</span
+                  >파일 또는 링크를 통해 업로드하세요</span
                 >
               </div>
             </li>
+
+            <!-- Bullet list -->
             <li
               class="command__list--item"
               tabindex="0"
-              @click="openSecondDepth"
-              @keydown.enter.space="openSecondDepth"
+              @click="openSecondDepth('bullet')"
+              @keydown.enter.space="openSecondDepth('bullet')"
             >
               <div class="iconBox">
                 <svg
@@ -86,48 +90,21 @@
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                    d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
                   />
                 </svg>
               </div>
               <div class="description">
-                <span class="description-title">이미지</span>
-                <span class="description-content"
-                  >파일 또는 링크를 이용해 업로드하세요</span
-                >
-              </div>
-            </li>
-            <li
-              class="command__list--item"
-              tabindex="0"
-              @click="openSecondDepth"
-              @keydown.enter.space="openSecondDepth"
-            >
-              <div class="iconBox">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6 icon"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
-                  />
-                </svg>
-              </div>
-              <div class="description">
-                <span class="description-title">이미지</span>
-                <span class="description-content"
-                  >파일 또는 링크를 이용해 업로드하세요</span
-                >
+                <span class="description-title">리스트</span>
+                <span class="description-content">리스트를 생성하세요</span>
               </div>
             </li>
           </ul>
         </div>
+
+        <!-- Second Depth Command -->
+
+        <!-- Image -->
         <div
           :class="{ active: showCommandSecondDepth }"
           class="image second-command-depth"
@@ -239,7 +216,7 @@ export default {
       showCommandContainer: false,
       showCommand: false,
       showCommandSecondDepth: false,
-      // left: 0,
+      cursorPos: 0,
     }
   },
 
@@ -380,21 +357,14 @@ export default {
       },
 
       editable: this.editable,
-      onUpdate: ({ editor }) => {
-        // HTML
-        // const rect =
-        //   currentTextNode.anchorNode?.getBoundingClientRect?.() ??
-        //   currentTextNode.anchorNode.parentElement.getBoundingClientRect()
+      onUpdate: ({ transaction }) => {
+        _vm.cursorPos = transaction.curSelection.$anchor.pos
 
-        // this.left = rect.width + rect.left
-        // console.log(rect)
+        _vm.onPressSlash()
 
         if (this.editable && this.isMounted) {
           this.createAnchor()
         }
-        // this.$nextTick(() => {
-        //   this.$emit('input', this.editor.getHTML())
-        // })
       },
     })
   },
@@ -508,6 +478,7 @@ export default {
       if (url !== '') {
         this.editor.chain().focus().setImage({ src: url }).run()
         this.closeAllCommands()
+        this.editor.commands.focus('end')
         this.$emit('addImage', url)
       }
     },
@@ -524,9 +495,19 @@ export default {
       setPostHeadings: 'setPostHeadings',
     }),
 
-    openSecondDepth() {
+    openSecondDepth(type) {
       this.showCommand = false
-      this.showCommandSecondDepth = true
+
+      if (type === 'bullet') {
+        this.editor.commands.toggleBulletList()
+        this.editor.commands.focus('end')
+      } else {
+        this.showCommandSecondDepth = true
+      }
+      this.editor.commands.deleteRange({
+        from: this.cursorPos - 1,
+        to: this.cursorPos,
+      })
     },
 
     removeCommandActive(e) {
@@ -554,6 +535,16 @@ export default {
     },
     changeUploadImageType(type) {
       this.imageInputMethod = type
+    },
+    onPressSlash() {
+      const vm = this
+      function onPressOtherKey(e) {
+        if (e.code !== 'Slash' && e.code !== 'Tab') {
+          vm.closeAllCommands()
+        }
+        window.removeEventListener('keydown', onPressOtherKey)
+      }
+      window.addEventListener('keydown', onPressOtherKey)
     },
   },
 }
