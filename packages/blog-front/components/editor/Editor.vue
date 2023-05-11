@@ -99,6 +99,37 @@
                 <span class="description-content">리스트를 생성하세요</span>
               </div>
             </li>
+
+            <!-- Image -->
+            <li
+              class="command__list--item"
+              tabindex="0"
+              @click="openSecondDepth('image')"
+              @keydown.enter.space="openSecondDepth('image')"
+            >
+              <div class="iconBox">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6 icon"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                  />
+                </svg>
+              </div>
+              <div class="description">
+                <span class="description-title">이미지</span>
+                <span class="description-content"
+                  >파일 또는 링크를 통해 업로드하세요</span
+                >
+              </div>
+            </li>
           </ul>
         </div>
 
@@ -536,8 +567,14 @@ export default {
       this.showCommand = false
       this.showCommandSecondDepth = false
       this.imageInputMethod = 'file'
+      this.commandListFocused = false
       this.commandList.firstElementChild.setAttribute('tabindex', 0)
-      console.log('child', this.commandList.firstElementChild)
+      this.editor.commands.focus()
+
+      // const currentTab = this.commandList.querySelector('li[tabindex="0"]')
+      // currentTab.setAttribute('tabindex', 0)
+
+      console.log('close')
     },
     changeUploadImageType(type) {
       this.imageInputMethod = type
@@ -550,13 +587,20 @@ export default {
 
       const vm = this
       function onPressOtherKey(e) {
-        if (e.code !== 'Slash' && e.code !== 'Tab' && e.code !== 'ArrowDown') {
+        console.log(vm.commandListFocused, '<<<commandListFocused')
+        if (e.code === 'Enter') {
+          // 목록 선택 중인 경우 secondDepthCommand 끄지 않음
+          vm.commandListFocused || vm.closeAllCommands()
+        } else if (e.code === 'ArrowDown') {
+          vm.moveCommand('ArrowDown')
+        } else if (
+          e.code !== 'Slash' &&
+          e.code !== 'Tab' &&
+          e.code !== 'ArrowDown'
+        ) {
           vm.closeAllCommands()
         }
 
-        if (e.code === 'ArrowDown') {
-          vm.moveCommand('ArrowDown')
-        }
         window.removeEventListener('keydown', onPressOtherKey)
       }
       window.addEventListener('keydown', onPressOtherKey)
@@ -569,14 +613,12 @@ export default {
       let prevTab = currentTab.previousElementSibling ?? null
       let nextTab = currentTab.nextElementSibling ?? currentTab
 
-      if (pressed === 'ArrowDown' || pressed === 'KeyA') {
+      if (pressed === 'ArrowDown' || pressed === 'KeyS') {
         prevTab = currentTab
         currentTab = nextTab
         prevTab.setAttribute('tabindex', -1)
         currentTab.setAttribute('tabindex', 0)
-        // this.commandListFocused = true
-        console.log(currentTab)
-      } else if (pressed === 'ArrowUp') {
+      } else if (pressed === 'ArrowUp' || pressed === 'KeyW') {
         if (prevTab) {
           nextTab = currentTab
           currentTab = prevTab
@@ -584,21 +626,27 @@ export default {
           currentTab.setAttribute('tabindex', 0)
         } else {
           // 가상 상위 리스트일 경우 editor로 돌아감
-          // this.commandListFocused = false
-          this.editor.commands.focus()
+          // this.editor.commands.focus()
+          currentTab = null
           this.closeAllCommands()
         }
       } else if (pressed === 'Escape') {
-        this.editor.commands.focus()
         currentTab.setAttribute('tabindex', -1)
+        this.commandListFocused = false
+        // this.editor.commands.focus()
 
         this.closeAllCommands()
       } else if (pressed === 'Enter') {
         currentTab.setAttribute('tabindex', -1)
+        this.commandList.firstElementChild.setAttribute('tabindex', 0)
+        this.commandListFocused = false
       }
+      // console.log(currentTab)
+      currentTab
+        ? (this.commandListFocused = true)
+        : (this.commandListFocused = false)
 
-      console.log(e.code)
-      currentTab.focus()
+      currentTab && currentTab.focus()
     },
   },
 }
