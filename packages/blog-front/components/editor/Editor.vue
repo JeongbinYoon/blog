@@ -39,13 +39,13 @@
       >
         <!-- Command -->
         <div :class="{ active: showCommand }" class="command">
-          <ul class="command__list">
+          <ul class="command__list" @keydown="moveCommand($event)">
             <!-- Image -->
             <li
               class="command__list--item"
               tabindex="0"
-              @click="openSecondDepth"
-              @keydown.enter.space="openSecondDepth"
+              @click="openSecondDepth('image')"
+              @keydown.enter.space="openSecondDepth('image')"
             >
               <div class="iconBox">
                 <svg
@@ -74,7 +74,7 @@
             <!-- Bullet list -->
             <li
               class="command__list--item"
-              tabindex="0"
+              tabindex="-1"
               @click="openSecondDepth('bullet')"
               @keydown.enter.space="openSecondDepth('bullet')"
             >
@@ -216,6 +216,8 @@ export default {
       showCommandContainer: false,
       showCommand: false,
       showCommandSecondDepth: false,
+      commandListFocused: false,
+      commandList: null,
       cursorPos: 0,
     }
   },
@@ -503,7 +505,9 @@ export default {
         this.editor.commands.focus('end')
       } else {
         this.showCommandSecondDepth = true
+        console.log(this.showCommandSecondDepth)
       }
+
       this.editor.commands.deleteRange({
         from: this.cursorPos - 1,
         to: this.cursorPos,
@@ -532,19 +536,69 @@ export default {
       this.showCommand = false
       this.showCommandSecondDepth = false
       this.imageInputMethod = 'file'
+      this.commandList.firstElementChild.setAttribute('tabindex', 0)
+      console.log('child', this.commandList.firstElementChild)
     },
     changeUploadImageType(type) {
       this.imageInputMethod = type
     },
+
+    // Command 창이 띄워진 상태에서 특정 키 외 입력시 창 끄기
     onPressSlash() {
+      const commandList = document.querySelector('.command .command__list')
+      this.commandList = commandList
+
       const vm = this
       function onPressOtherKey(e) {
-        if (e.code !== 'Slash' && e.code !== 'Tab') {
+        if (e.code !== 'Slash' && e.code !== 'Tab' && e.code !== 'ArrowDown') {
           vm.closeAllCommands()
+        }
+
+        if (e.code === 'ArrowDown') {
+          vm.moveCommand('ArrowDown')
         }
         window.removeEventListener('keydown', onPressOtherKey)
       }
       window.addEventListener('keydown', onPressOtherKey)
+    },
+
+    // Command list 에서 방향키 이동
+    moveCommand(e, code) {
+      const pressed = code ?? e.code
+      let currentTab = this.commandList.querySelector('li[tabindex="0"]')
+      let prevTab = currentTab.previousElementSibling ?? null
+      let nextTab = currentTab.nextElementSibling ?? currentTab
+
+      if (pressed === 'ArrowDown' || pressed === 'KeyA') {
+        prevTab = currentTab
+        currentTab = nextTab
+        prevTab.setAttribute('tabindex', -1)
+        currentTab.setAttribute('tabindex', 0)
+        // this.commandListFocused = true
+        console.log(currentTab)
+      } else if (pressed === 'ArrowUp') {
+        if (prevTab) {
+          nextTab = currentTab
+          currentTab = prevTab
+          nextTab.setAttribute('tabindex', -1)
+          currentTab.setAttribute('tabindex', 0)
+        } else {
+          // 가상 상위 리스트일 경우 editor로 돌아감
+          // this.commandListFocused = false
+          this.editor.commands.focus()
+          this.closeAllCommands()
+        }
+      } else if (pressed === 'Escape') {
+        this.editor.commands.focus()
+        currentTab.setAttribute('tabindex', -1)
+
+        this.closeAllCommands()
+      } else if (pressed === 'Enter') {
+        currentTab.setAttribute('tabindex', -1)
+      }
+
+      console.log(e.code)
+      currentTab.focus()
     },
   },
 }
