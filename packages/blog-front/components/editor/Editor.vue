@@ -71,6 +71,129 @@
               </div>
             </li>
 
+            <!-- Heading1 -->
+            <li
+              class="command__list--item"
+              tabindex="-1"
+              @click="openSecondDepth('heading-1')"
+              @keydown.enter.space="openSecondDepth('heading-1')"
+            >
+              <div class="iconBox">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 96 960 960"
+                  class="icon"
+                >
+                  <path
+                    d="M200 776V376h60v170h180V376h60v400h-60V606H260v170h-60Zm500 0V436h-80v-60h140v400h-60Z"
+                  />
+                </svg>
+              </div>
+              <div class="description">
+                <span class="description-title">제목 1</span>
+                <span class="description-content">제목을 작성하세요</span>
+              </div>
+            </li>
+
+            <!-- Heading2 -->
+            <li
+              class="command__list--item"
+              tabindex="-1"
+              @click="openSecondDepth('heading-2')"
+              @keydown.enter.space="openSecondDepth('heading-2')"
+            >
+              <div class="iconBox">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 96 960 960"
+                  class="icon"
+                >
+                  <path
+                    d="M120 776V376h60v170h180V376h60v400h-60V606H180v170h-60Zm420 0V606q0-24.75 17.625-42.375T600 546h180V436H540v-60h240q25 0 42.5 17.625T840 436v110q0 24.75-17.625 42.375T780 606H600v110h240v60H540Z"
+                  />
+                </svg>
+              </div>
+              <div class="description">
+                <span class="description-title">제목 2</span>
+                <span class="description-content">제목을 작성하세요</span>
+              </div>
+            </li>
+
+            <!-- Heading3 -->
+            <li
+              class="command__list--item"
+              tabindex="-1"
+              @click="openSecondDepth('heading-3')"
+              @keydown.enter.space="openSecondDepth('heading-3')"
+            >
+              <div class="iconBox">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 96 960 960"
+                  class="icon"
+                >
+                  <path
+                    d="M120 776V376h60v170h180V376h60v400h-60V606H180v170h-60Zm420 0v-60h240V606H620v-60h160V436H540v-60h240q25 0 42.5 17.625T840 436v280q0 24.75-17.625 42.375T780 776H540Z"
+                  />
+                </svg>
+              </div>
+              <div class="description">
+                <span class="description-title">제목 3</span>
+                <span class="description-content">제목을 작성하세요</span>
+              </div>
+            </li>
+
+            <!-- Heading4 -->
+            <li
+              class="command__list--item"
+              tabindex="-1"
+              @click="openSecondDepth('heading-4')"
+              @keydown.enter.space="openSecondDepth('heading-4')"
+            >
+              <div class="iconBox">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 96 960 960"
+                  class="icon"
+                >
+                  <path
+                    d="M120 776V376h60v170h180V376h60v400h-60V606H180v170h-60Zm620 0V646H540V376h60v210h140V376h60v210h80v60h-80v130h-60Z"
+                  />
+                </svg>
+              </div>
+              <div class="description">
+                <span class="description-title">제목 4</span>
+                <span class="description-content">제목을 작성하세요</span>
+              </div>
+            </li>
+
+            <!-- paragraph -->
+            <li
+              class="command__list--item"
+              tabindex="-1"
+              @click="openSecondDepth('paragraph')"
+              @keydown.enter.space="openSecondDepth('paragraph')"
+            >
+              <div class="iconBox">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 96 960 960"
+                  class="icon"
+                >
+                  <path
+                    d="M277 777h275v-60H277v60Zm0-171h406v-60H277v60Zm0-171h406v-60H277v60Zm-97 501q-24 0-42-18t-18-42V276q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600V276H180v600Zm0-600v600-600Z"
+                  />
+                </svg>
+              </div>
+              <div class="description">
+                <span class="description-title">단락</span>
+                <span class="description-content"
+                  >단락을 작성하세요.<br />마크업 단축키가 작동하지
+                  않습니다</span
+                >
+              </div>
+            </li>
+
             <!-- Bullet list -->
             <li
               class="command__list--item"
@@ -81,31 +204,54 @@
               <div class="iconBox">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6 icon"
+                  viewBox="0 96 960 960"
+                  class="icon"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                    d="M377 858v-60h463v60H377Zm0-252v-60h463v60H377Zm0-253v-60h463v60H377ZM189 895q-28.05 0-48.025-19Q121 857 121 828.5t19.5-48q19.5-19.5 48-19.5t47.5 19.975Q255 800.95 255 829q0 27.225-19.387 46.612Q216.225 895 189 895Zm0-252q-28.05 0-48.025-19.681Q121 603.638 121 576t19.975-47.319Q160.95 509 189 509q27.225 0 46.613 19.681Q255 548.362 255 576t-19.387 47.319Q216.225 643 189 643Zm-1-253q-27.637 0-47.319-19.681Q121 350.638 121 323t19.681-47.319Q160.363 256 188 256q27.637 0 47.319 19.681Q255 295.362 255 323t-19.681 47.319Q215.637 390 188 390Z"
                   />
                 </svg>
               </div>
               <div class="description">
-                <span class="description-title">리스트</span>
-                <span class="description-content">리스트를 생성하세요</span>
+                <span class="description-title">불릿 리스트</span>
+                <span class="description-content"
+                  >불릿 리스트를 작성하세요</span
+                >
               </div>
             </li>
 
-            <!-- Image -->
+            <!-- Ordered list -->
             <li
               class="command__list--item"
-              tabindex="0"
-              @click="openSecondDepth('image')"
-              @keydown.enter.space="openSecondDepth('image')"
+              tabindex="-1"
+              @click="openSecondDepth('ordered')"
+              @keydown.enter.space="openSecondDepth('ordered')"
+            >
+              <div class="iconBox">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 96 960 960"
+                  class="icon"
+                >
+                  <path
+                    d="M120 976v-60h100v-30h-60v-60h60v-30H120v-60h120q17 0 28.5 11.5T280 776v40q0 17-11.5 28.5T240 856q17 0 28.5 11.5T280 896v40q0 17-11.5 28.5T240 976H120Zm0-280V586q0-17 11.5-28.5T160 546h60v-30H120v-60h120q17 0 28.5 11.5T280 496v70q0 17-11.5 28.5T240 606h-60v30h100v60H120Zm60-280V236h-60v-60h120v240h-60Zm189 431v-60h471v60H369Zm0-243v-60h471v60H369Zm0-243v-60h471v60H369Z"
+                  />
+                </svg>
+              </div>
+              <div class="description">
+                <span class="description-title">숫자 리스트</span>
+                <span class="description-content"
+                  >숫자 리스트를 작성하세요</span
+                >
+              </div>
+            </li>
+
+            <!-- Code block-->
+            <li
+              class="command__list--item"
+              tabindex="-1"
+              @click="openSecondDepth('code-block')"
+              @keydown.enter.space="openSecondDepth('code-block')"
             >
               <div class="iconBox">
                 <svg
@@ -119,14 +265,14 @@
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                    d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"
                   />
                 </svg>
               </div>
               <div class="description">
-                <span class="description-title">이미지</span>
+                <span class="description-title">코드블럭</span>
                 <span class="description-content"
-                  >파일 또는 링크를 통해 업로드하세요</span
+                  >코드블럭에서 코드를 작성하세요</span
                 >
               </div>
             </li>
@@ -530,9 +676,29 @@ export default {
 
     openSecondDepth(type) {
       this.showCommand = false
-
-      if (type === 'bullet') {
+      if (type === 'heading-1') {
+        this.editor.commands.toggleHeading({ level: 1 })
+        this.editor.commands.focus('end')
+      } else if (type === 'heading-2') {
+        this.editor.commands.toggleHeading({ level: 2 })
+        this.editor.commands.focus('end')
+      } else if (type === 'heading-3') {
+        this.editor.commands.toggleHeading({ level: 3 })
+        this.editor.commands.focus('end')
+      } else if (type === 'heading-4') {
+        this.editor.commands.toggleHeading({ level: 4 })
+        this.editor.commands.focus('end')
+      } else if (type === 'paragraph') {
+        this.editor.commands.setParagraph()
+        this.editor.commands.focus('end')
+      } else if (type === 'bullet') {
         this.editor.commands.toggleBulletList()
+        this.editor.commands.focus('end')
+      } else if (type === 'ordered') {
+        this.editor.commands.toggleOrderedList()
+        this.editor.commands.focus('end')
+      } else if (type === 'code-block') {
+        this.editor.commands.toggleCodeBlock()
         this.editor.commands.focus('end')
       } else {
         this.showCommandSecondDepth = true
@@ -814,6 +980,8 @@ ul {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 300px;
+    height: 400px;
+    overflow-y: hidden;
     background-color: #fff;
     border: 1px solid $color_border_grey;
     border-radius: 5px;
@@ -856,6 +1024,7 @@ ul {
           justify-content: center;
           align-items: center;
           width: 46px;
+          min-width: 46px;
           height: 46px;
           margin-right: 7px;
           background: #fff;
@@ -875,6 +1044,7 @@ ul {
           &-content {
             font-size: 12px;
             color: $color_dark_grey;
+            line-height: 1.3;
           }
         }
       }
